@@ -1,35 +1,28 @@
-from PySide6.QtWidgets import QWidget, QMessageBox, QCheckBox, QVBoxLayout, QFormLayout, QScrollArea, QLineEdit, QDoubleSpinBox, QDateEdit, QCheckBox, QPushButton, QHBoxLayout, QPushButton, QFrame, QHBoxLayout, QLabel, QSizePolicy, QDialog
+"""Expense Table"""
+
+from PySide6.QtWidgets import (
+    QMessageBox,
+    QVBoxLayout,
+    QFormLayout,
+    QLineEdit,
+    QDoubleSpinBox,
+    QDateEdit,
+    QCheckBox,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QSizePolicy,
+    QDialog,
+)
 from PySide6.QtCore import Qt, Signal, QDate
 
-from pg_budget.core.models import Expense
 from pg_budget.core.services import expenseService
-from pg_budget.gui.widgets.base import BaseRow, RowField
 from pg_budget.gui.widgets.base.base_table import BaseTable
-
-
-class ExpenseRow(BaseRow):
-    paid_changed = Signal(bool)
-
-    def __init__(self, expense: Expense, parent=None):
-        
-        fields = [
-            RowField("Name", value=expense.name),
-            RowField("Amount", value=f"{expense.amount:.2f} €"),
-            RowField("Date", value=expense.date),
-            RowField("Paid", type=QCheckBox, value=expense.payed)
-        ]
-
-        super().__init__(fields, expense.expense_id , parent)
-
-    def _init_connections(self):
-        paid_checkbox: QCheckBox = self.get_widget_by_name("Paid")
-        if paid_checkbox:
-            paid_checkbox.stateChanged.connect(lambda state: self.paid_changed.emit(state == 2))
-
-
+from pg_budget.gui.widgets.expense_row import ExpenseRow
 
 
 class ExpensesTable(BaseTable):
+    """Expense table class"""
 
     def __init__(self):
         super().__init__(ExpenseRow)
@@ -37,7 +30,6 @@ class ExpensesTable(BaseTable):
     def _init_row_connections(self, row):
         row.paid_changed.connect(lambda value, eid=row.row_id: self._on_paid_changed(eid, value))
         row.row_clicked.connect(lambda eid=row.row_id: self._show_expense_detail(eid))
-
 
     def _on_paid_changed(self, expense_id: str, paid: bool):
         expenseService.update(expense_id, payed=paid)
@@ -56,8 +48,9 @@ class ExpensesTable(BaseTable):
     #     }
 
 
-    
 class ExpenseDialog(QDialog):
+    """Expense dialog class"""
+
     expense_deleted = Signal(str)
     expense_updated = Signal(str)
 
@@ -80,6 +73,7 @@ class ExpenseDialog(QDialog):
         self.init_buttons(layout)
 
     def init_info(self, layout):
+        """init info"""
         form_layout = QFormLayout()
         layout.addLayout(form_layout)
 
@@ -97,7 +91,7 @@ class ExpenseDialog(QDialog):
         self.date_input = QDateEdit()
         self.date_input.setCalendarPopup(True)
         if self.expense:
-            y, m, d = map(int, self.expense.date.split('-'))
+            y, m, d = map(int, self.expense.date.split("-"))
             self.date_input.setDate(QDate(y, m, d))
         else:
             self.date_input.setDate(QDate.currentDate())
@@ -110,8 +104,8 @@ class ExpenseDialog(QDialog):
 
         form_layout.addRow(QLabel("Paid:"), self.paid_checkbox)
 
-
     def init_buttons(self, layout):
+        """init buttons"""
         btn_layout = QHBoxLayout()
         save_btn = QPushButton("Save")
         save_btn.clicked.connect(self.save_expense)
@@ -130,12 +124,13 @@ class ExpenseDialog(QDialog):
             layout.addWidget(deleted_btn)
 
     def save_expense(self):
+        """save expenses"""
 
         new_data = {
             "name": self.name_input.text(),
             "amount": self.amount_input.value(),
             "date": self.date_input.date().toString("yyyy-MM-dd"),
-            "payed": self.paid_checkbox.isChecked()
+            "payed": self.paid_checkbox.isChecked(),
         }
 
         if self.expense_id:
@@ -146,14 +141,15 @@ class ExpenseDialog(QDialog):
         self.close()
 
     def deleted_expense(self):
+        """del expense"""
         reply = QMessageBox.question(
-        self,
+            self,
             "Confirmation",
             "Are you sure you want to delete this expense?",
-            QMessageBox.Yes | QMessageBox.No
+            QMessageBox.Yes | QMessageBox.No,
         )
 
         if reply == QMessageBox.Yes:
             expenseService.delete(self.expense_id)
             self.expense_deleted.emit(self.expense_id)
-            self.accept() 
+            self.accept()

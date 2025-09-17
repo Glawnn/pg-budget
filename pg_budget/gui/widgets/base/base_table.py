@@ -1,12 +1,14 @@
-from PySide6.QtWidgets import QWidget, QMessageBox, QCheckBox, QVBoxLayout, QFormLayout, QScrollArea, QLineEdit, QDoubleSpinBox, QDateEdit, QCheckBox, QPushButton, QHBoxLayout, QPushButton, QFrame, QHBoxLayout, QLabel, QSizePolicy, QDialog
-from PySide6.QtCore import Qt, Signal, QDate
+"""base of table"""
 
-from pg_budget.core.models import Expense
-from pg_budget.core.services import expenseService
-from pg_budget.gui.widgets.base import BaseRow, RowField
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QFrame
+from PySide6.QtCore import Qt, Signal
+
+from pg_budget.gui.widgets.base import BaseRow
 
 
 class BaseTable(QFrame):
+    """Base cladd for Table"""
+
     updated_table = Signal()
 
     def __init__(self, row_class: type):
@@ -29,18 +31,24 @@ class BaseTable(QFrame):
         scroll.setWidget(self.container)
 
     def clear(self):
+        """Clear all elements of the table content"""
         for i in reversed(range(self.container_layout.count())):
             widget = self.container_layout.itemAt(i).widget()
             if widget:
                 widget.setParent(None)
         self.rows = []
         self._clear()
-    
+
     def _clear(self):
         """add other clear"""
 
     def load(self, items, clear=True):
-        """Charge une liste d’objets (modèles)"""
+        """Load a list of items (models)
+
+        Args:
+            items (_type_): list of models
+            clear (bool, optional): clear table before reload. Defaults to True.
+        """
         if clear:
             self.clear()
 
@@ -58,11 +66,11 @@ class BaseTable(QFrame):
         pass
 
     def resizing(self):
+        """Resize all row"""
         if self.rows:
             column_keys = [name for name, widget in self.rows[0].widgets]
             max_widths = {key: 0 for key in column_keys}
 
-            # Calculer la largeur max de chaque colonne
             for row in self.rows:
                 for w_name, widget in row.widgets:
                     widget_width = widget.sizeHint().width()
@@ -71,4 +79,3 @@ class BaseTable(QFrame):
 
             for row in self.rows:
                 row.resize_columns(max_widths)
-

@@ -1,6 +1,4 @@
-
 from pg_budget.core.models.expense import Expense
-
 
 
 class TestExpenseModel:
