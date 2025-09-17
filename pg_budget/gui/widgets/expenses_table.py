@@ -26,108 +26,34 @@ class ExpenseRow(BaseRow):
         if paid_checkbox:
             paid_checkbox.stateChanged.connect(lambda state: self.paid_changed.emit(state == 2))
 
-class ExpensesTable2(BaseTable):
-    updated_table = Signal()
+
+
+
+class ExpensesTable(BaseTable):
+
     def __init__(self):
         super().__init__(ExpenseRow)
 
     def _init_row_connections(self, row):
         row.paid_changed.connect(lambda value, eid=row.row_id: self._on_paid_changed(eid, value))
+        row.row_clicked.connect(lambda eid=row.row_id: self._show_expense_detail(eid))
+
 
     def _on_paid_changed(self, expense_id: str, paid: bool):
         expenseService.update(expense_id, payed=paid)
         self.updated_table.emit()
 
-class ExpensesTable(QFrame):
-    updated_table = Signal()
-
-    def __init__(self):
-        super().__init__()
-
-        self.selected_year = None
-        self.selected_month = None
-
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        layout.addWidget(scroll)
-        
-        self.container = QWidget()
-        self.container_layout = QVBoxLayout(self.container)
-        self.container_layout.setContentsMargins(0, 0, 0, 0)
-        self.container_layout.setSpacing(5)
-        scroll.setWidget(self.container)
-
-        self.rows: list[ExpenseRow] = []
-        self.expenses: list[Expense] = []
-   
-
-    def clear(self):
-        for i in reversed(range(self.container_layout.count())):
-            widget = self.container_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)  # détache du layout
-        self.rows = []
-        self.expenses = []
-
-    def load_month(self, year: int, month: int):
-        self.clear()
-        self.selected_year = year
-        self.selected_month = month
-        
-        self.expenses = expenseService.get_by_month(year, month)
-
-        for expense in self.expenses:
-            row = ExpenseRow(expense)
-
-            row.paid_changed.connect(lambda value, eid=expense.expense_id: self._on_paid_changed(eid, value))
-            row.row_clicked.connect(lambda eid=expense.expense_id: self.show_expense_detail(eid))
-
-            self.container_layout.addWidget(row)
-            self.rows.append(row)
-
-        self.container_layout.setAlignment(Qt.AlignTop)
-        self.updated_table.emit()
-
-        # resizing
-        if self.rows:
-            column_keys = [name for name, widget in self.rows[0].widgets]
-            max_widths = {key: 0 for key in column_keys}
-
-            # Calculer la largeur max de chaque colonne
-            for row in self.rows:
-                for w_name, widget in row.widgets:
-                    widget_width = widget.sizeHint().width()
-                    if widget_width > max_widths[w_name]:
-                        max_widths[w_name] = widget_width
-
-            for row in self.rows:
-                row.resize_columns(max_widths)
-
-    def _on_paid_changed(self, expense_id: str, paid: bool):
-        expenseService.update(expense_id, payed=paid)
-
-        for exp in self.expenses:
-            if exp.expense_id == expense_id:
-                exp.payed = paid
-                break
-
-        self.updated_table.emit()
-
-    def show_expense_detail(self, expense_id):
-        dialog = ExpenseDialog(parent=self.window(), expense_id=expense_id)
-        dialog.expense_updated.connect(lambda eid: self.load_month(self.selected_year, self.selected_month))
-        dialog.expense_deleted.connect(lambda eid: self.load_month(self.selected_year, self.selected_month))
+    def _show_expense_detail(self, eid):
+        dialog = ExpenseDialog(parent=self.window(), expense_id=eid)
+        dialog.expense_updated.connect(lambda eid: self.updated_table.emit())
+        dialog.expense_deleted.connect(lambda eid: self.updated_table.emit())
         dialog.exec()
 
-    def get_data(self):
-        return {
-            "total": sum(exp.amount for exp in self.expenses),
-            "remaining": sum(exp.amount for exp in self.expenses if not exp.payed)
-        }
+    # def get_data(self):
+    #     return {
+    #         "total": sum(exp.amount for exp in self.expenses),
+    #         "remaining": sum(exp.amount for exp in self.expenses if not exp.payed)
+    #     }
 
 
     

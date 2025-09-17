@@ -13,10 +13,14 @@ from pg_budget.gui.views.expenses_plan_view import ExpensesPlanView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 
+from importlib.metadata import version
+
+__version__ = "v" + version("pg-budget")
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Mini Dashboard Example")
+        self.setWindowTitle(f"PG-Budget {__version__}")
         self.resize(800, 400)
         
 
@@ -108,8 +112,8 @@ class AppMenu:
         # Affiche le chemin dans la status bar
         self.main_window.status_bar.showMessage(f"DB: {file_path}")
 
-        self.main_window.expenses_view.reload()
-        self.main_window.expenses_plan_view.reload()
+        self.main_window.expenses_view.load()
+        self.main_window.expenses_plan_view.load()
 
     def _init_edit_menu(self):
         actions_menu: QMenu = self.main_window.menuBar().addMenu("Actions")
@@ -130,15 +134,15 @@ class AppMenu:
         self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view)
         dialog = ExpenseDialog(parent=self.main_window)
         dialog.exec()
-        self.main_window.expenses_view.load_table()
-        self.main_window.expenses_view.load_stats()
+        self.main_window.expenses_view.load()
+        self.main_window.expenses_view.load()
 
 
     def create_expenses_plan(self):
         self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view)
         dialog = ExpensesPlanDialog(parent=self.main_window)
         dialog.exec()
-        self.main_window.expenses_plan_view.load_table()
+        self.main_window.expenses_plan_view.load()
 
     def _init_view_menu(self):
         view_menu: QMenu = self.main_window.menuBar().addMenu("Views")
