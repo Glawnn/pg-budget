@@ -1,0 +1,11 @@
+ExpenseRow:hover {
+    background-color: #3a3f45;
+}
+
+ExpensesPlanRow:hover {
+    background-color: #3a3f45;
+}
+
+ExpensesTable {
+    background-color: #262626;
+}
