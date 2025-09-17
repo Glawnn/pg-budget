@@ -1,4 +1,4 @@
-
+"""expanse plan service"""
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -10,21 +10,22 @@ from pg_budget.core.services.expense_service import ExpenseService
 
 
 class ExpensesPlanService(CRUDService):
+    """expanse plan service"""
+
     def __init__(self):
         super().__init__(ExpensesPlan)
         self.expense_service = ExpenseService()
 
     def create(self, **kwargs):
+        """custom create plan"""
         plan = super().create(**kwargs)
 
         expenses = self._generate_expenses(plan)
-        
+
         for expense in expenses:
             self.expense_service.create(**expense.to_dict())
-        
-        return plan
 
-        
+        return plan
 
     def _generate_expenses(self, plan: ExpensesPlan):
         expenses = []
@@ -36,26 +37,27 @@ class ExpensesPlanService(CRUDService):
 
         while current <= end:
             if current >= start:
-                expenses.append(Expense(
+                expenses.append(
+                    Expense(
                         amount=plan.amount,
                         name=plan.name,
                         description=plan.description,
                         category_id=plan.category_id,
                         plan_id=plan.expensesplan_id,
-                        date=current.strftime("%Y-%m-%d")
+                        date=current.strftime("%Y-%m-%d"),
                     )
                 )
-                
 
-            if plan.frequency == 'monthly':
+            if plan.frequency == "monthly":
                 current += relativedelta(months=1)
-            elif plan.frequency == 'quarterly':
+            elif plan.frequency == "quarterly":
                 current += relativedelta(months=3)
-            elif plan.frequency == 'yearly':
-                current += relativedelta(years=1) 
+            elif plan.frequency == "yearly":
+                current += relativedelta(years=1)
             else:
                 raise ValueError(f"Unknown frequency: {plan.frequency}")
-            
+
         return expenses
-    
+
+
 expensesPlanService = ExpensesPlanService()

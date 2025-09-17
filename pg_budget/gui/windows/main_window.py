@@ -1,33 +1,40 @@
-from enum import Enum
+"""Main window"""
+
 import os
-from PySide6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QStackedWidget, QToolBar, QPushButton
 from PySide6.QtWidgets import (
-    QMainWindow, QLabel, QVBoxLayout, QWidget, QStackedWidget, QFileDialog, QMessageBox,
-    QMenuBar, QMenu
+    QMainWindow,
+    QVBoxLayout,
+    QWidget,
+    QStackedWidget,
+    QFileDialog,
+    QMessageBox,
+    QMenu,
 )
 from PySide6.QtGui import QAction
+from importlib.metadata import version
+
 
 from pg_budget.core.db import db
-from pg_budget.gui.views import ExpensesView
-from pg_budget.gui.views.expenses_plan_view import ExpensesPlanView
+from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 
-from importlib.metadata import version
 
 __version__ = "v" + version("pg-budget")
 
+
 class MainWindow(QMainWindow):
+    """Main window class"""
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"PG-Budget {__version__}")
         self.resize(800, 400)
-        
 
         self._init()
 
     def _init(self):
-        with open("pg_budget/gui/styles/light_style.qss", "r") as file:
+        with open("pg_budget/gui/styles/light_style.qss", "r", encoding="utf-8") as file:
             qss = file.read()
             self.setStyleSheet(qss)
 
@@ -37,7 +44,6 @@ class MainWindow(QMainWindow):
         self._create_central_widget()
         self._create_status_bar()
 
-
     def _create_central_widget(self):
         central = QWidget()
         self.setCentralWidget(central)
@@ -45,7 +51,7 @@ class MainWindow(QMainWindow):
 
         self.stacked_widget = QStackedWidget()
         layout.addWidget(self.stacked_widget)
-        
+
         # --- Vue 1 : Expenses ---
         self.expenses_view = ExpensesView()
         self.stacked_widget.addWidget(self.expenses_view)
@@ -58,13 +64,15 @@ class MainWindow(QMainWindow):
         self.status_bar = self.statusBar()
         self.status_bar.showMessage("Ready")
 
-    
 
 class AppMenu:
+    """class for manage menu"""
+
     def __init__(self, main_window: MainWindow):
         self.main_window = main_window
 
     def init_menu_bar(self):
+        """init the menubar"""
         self._init_file_menu()
         self._init_edit_menu()
         self._init_view_menu()
@@ -85,19 +93,20 @@ class AppMenu:
         file_menu.addAction(exit_action)
 
     def select_database(self, create: bool = False):
+        """select the db"""
         if create:
             file_path, _ = QFileDialog.getSaveFileName(
                 self.main_window,
                 "Create New Database",
                 os.getcwd(),
-                "JSON Files (*.json);;All Files (*)"
+                "JSON Files (*.json);;All Files (*)",
             )
         else:
             file_path, _ = QFileDialog.getOpenFileName(
                 self.main_window,
                 "Open Database",
                 os.getcwd(),
-                "JSON Files (*.json);;All Files (*)"
+                "JSON Files (*.json);;All Files (*)",
             )
 
         if not file_path:
@@ -131,14 +140,15 @@ class AppMenu:
         actions_menu.addAction(add_input)
 
     def create_expense(self):
+        """create an expense"""
         self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view)
         dialog = ExpenseDialog(parent=self.main_window)
         dialog.exec()
         self.main_window.expenses_view.load()
         self.main_window.expenses_view.load()
 
-
     def create_expenses_plan(self):
+        """create expense plan"""
         self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view)
         dialog = ExpensesPlanDialog(parent=self.main_window)
         dialog.exec()
@@ -149,16 +159,12 @@ class AppMenu:
 
         show_expenses = QAction("Expenses View", self.main_window)
         show_expenses.triggered.connect(
-            lambda: self.main_window.stacked_widget.setCurrentWidget(
-                self.main_window.expenses_view
-            )
+            lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view)
         )
         view_menu.addAction(show_expenses)
 
         show_other = QAction("ExpensesPlan View", self.main_window)
         show_other.triggered.connect(
-            lambda: self.main_window.stacked_widget.setCurrentWidget(
-                self.main_window.expenses_plan_view
-            )
+            lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view)
         )
         view_menu.addAction(show_other)

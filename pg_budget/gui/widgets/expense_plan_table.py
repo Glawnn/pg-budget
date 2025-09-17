@@ -1,38 +1,34 @@
-from PySide6.QtWidgets import QWidget, QMessageBox, QComboBox, QVBoxLayout, QFormLayout, QScrollArea, QLineEdit, QDoubleSpinBox, QDateEdit, QCheckBox, QPushButton, QHBoxLayout, QPushButton, QFrame, QHBoxLayout, QLabel, QSizePolicy, QDialog
+"""Custom table for ExpensePlan"""
+
+from PySide6.QtWidgets import (
+    QMessageBox,
+    QComboBox,
+    QVBoxLayout,
+    QFormLayout,
+    QLineEdit,
+    QDoubleSpinBox,
+    QDateEdit,
+    QPushButton,
+    QHBoxLayout,
+    QLabel,
+    QDialog,
+)
 from PySide6.QtCore import Qt, Signal, QDate
 
 from pg_budget.core.models.expenses_plan import ExpensesPlan
 from pg_budget.core.services import expensesPlanService
-from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
 from pg_budget.gui.widgets.base.base_table import BaseTable
-
-
-class ExpensesPlanRow(BaseRow):
-
-    def __init__(self, expenses_plan: ExpensesPlan, parent=None):
-
-        fields = [
-            RowField("Name", value=expenses_plan.name),
-            RowField("Amount", value=f"{expenses_plan.amount:.2f} €"),
-            RowField("Start Date", value=expenses_plan.start_date),
-            RowField("End Date", value=expenses_plan.end_date),
-        ]
-
-        super().__init__(fields, expenses_plan.expensesplan_id, parent)
-
-    def _init_connections(self):
-        pass
-
+from pg_budget.gui.widgets.expense_plan_row import ExpensesPlanRow
 
 
 class ExpensesPlanTable(BaseTable):
+    """class for table expenses plans table"""
 
     def __init__(self):
         super().__init__(ExpensesPlanRow)
 
     def _init_row_connections(self, row):
         row.row_clicked.connect(lambda eid=row.row_id: self._show_expenses_plan_detail(eid))
-
 
     def _show_expenses_plan_detail(self, expenses_plan_id):
         dialog = ExpensesPlanDialog(parent=self.window(), expenses_plan_id=expenses_plan_id)
@@ -41,8 +37,9 @@ class ExpensesPlanTable(BaseTable):
         dialog.exec()
 
 
-    
-class ExpensesPlanDialog(QDialog):
+class ExpensesPlanDialog(QDialog):  # pylint: disable=too-many-instance-attributes
+    """dialog"""
+
     expenses_plan_deleted = Signal(str)
     expenses_plan_updated = Signal(str)
 
@@ -65,6 +62,7 @@ class ExpensesPlanDialog(QDialog):
         self.init_buttons(layout)
 
     def init_info(self, layout):
+        """tmp"""
         form_layout = QFormLayout()
         layout.addLayout(form_layout)
 
@@ -86,7 +84,7 @@ class ExpensesPlanDialog(QDialog):
         self.start_date_input = QDateEdit()
         self.start_date_input.setCalendarPopup(True)
         if self.expenses_plan:
-            y, m, d = map(int, self.expenses_plan.start_date.split('-'))
+            y, m, d = map(int, self.expenses_plan.start_date.split("-"))
             self.start_date_input.setDate(QDate(y, m, d))
         else:
             self.start_date_input.setDate(QDate.currentDate())
@@ -96,7 +94,7 @@ class ExpensesPlanDialog(QDialog):
         self.end_date_input = QDateEdit()
         self.end_date_input.setCalendarPopup(True)
         if self.expenses_plan:
-            y, m, d = map(int, self.expenses_plan.end_date.split('-'))
+            y, m, d = map(int, self.expenses_plan.end_date.split("-"))
             self.end_date_input.setDate(QDate(y, m, d))
         else:
             self.end_date_input.setDate(QDate.currentDate())
@@ -106,7 +104,7 @@ class ExpensesPlanDialog(QDialog):
         self.due_date_input = QDateEdit()
         self.due_date_input.setCalendarPopup(True)
         if self.expenses_plan:
-            y, m, d = map(int, self.expenses_plan.due_date.split('-'))
+            y, m, d = map(int, self.expenses_plan.due_date.split("-"))
             self.due_date_input.setDate(QDate(y, m, d))
         else:
             self.due_date_input.setDate(QDate.currentDate())
@@ -114,7 +112,7 @@ class ExpensesPlanDialog(QDialog):
 
         # Frequency
         self.frequency_input = QComboBox()
-        self.frequency_input.addItems(['monthly', 'quarterly', 'yearly']) 
+        self.frequency_input.addItems(["monthly", "quarterly", "yearly"])
 
         if self.expenses_plan:
             index = self.frequency_input.findText(self.expenses_plan.frequency)
@@ -123,13 +121,8 @@ class ExpensesPlanDialog(QDialog):
 
         form_layout.addRow(QLabel("Frequency:"), self.frequency_input)
 
-        
-
-
-
-
-
     def init_buttons(self, layout):
+        """tmp"""
         btn_layout = QHBoxLayout()
         save_btn = QPushButton("Save")
         save_btn.clicked.connect(self.save_expenses_plan)
@@ -148,6 +141,7 @@ class ExpensesPlanDialog(QDialog):
             layout.addWidget(deleted_btn)
 
     def save_expenses_plan(self):
+        """tmp"""
         new_data = {
             "name": self.name_input.text(),
             "amount": self.amount_input.value(),
@@ -155,7 +149,7 @@ class ExpensesPlanDialog(QDialog):
             "end_date": self.end_date_input.date().toString("yyyy-MM-dd"),
             "due_date": self.due_date_input.date().toString("yyyy-MM-dd"),
             "description": self.description_input.text(),
-            "frequency": self.frequency_input.currentText()
+            "frequency": self.frequency_input.currentText(),
         }
 
         if self.expenses_plan_id:
@@ -166,14 +160,15 @@ class ExpensesPlanDialog(QDialog):
         self.close()
 
     def deleted_expenses_plan(self):
+        """tmp"""
         reply = QMessageBox.question(
-        self,
+            self,
             "Confirmation",
             "Are you sure you want to delete this Plan?",
-            QMessageBox.Yes | QMessageBox.No
+            QMessageBox.Yes | QMessageBox.No,
         )
 
         if reply == QMessageBox.Yes:
             expensesPlanService.delete(self.expenses_plan_id)
             self.expenses_plan_deleted.emit(self.expenses_plan_id)
-            self.accept() 
+            self.accept()
