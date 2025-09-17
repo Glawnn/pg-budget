@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt, Signal, QDate
 from pg_budget.core.models.expenses_plan import ExpensesPlan
 from pg_budget.core.services import expensesPlanService
 from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
+from pg_budget.gui.widgets.base.base_table import BaseTable
 
 
 class ExpensesPlanRow(BaseRow):
@@ -24,73 +25,19 @@ class ExpensesPlanRow(BaseRow):
 
 
 
-class ExpensesPlanTable(QFrame):
-    updated_table = Signal()
+class ExpensesPlanTable(BaseTable):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(ExpensesPlanRow)
 
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        
+    def _init_row_connections(self, row):
+        row.row_clicked.connect(lambda eid=row.row_id: self._show_expenses_plan_detail(eid))
 
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        layout.addWidget(scroll)
-        
-        self.container = QWidget()
-        self.container_layout = QVBoxLayout(self.container)
-        self.container_layout.setContentsMargins(0, 0, 0, 0)
-        self.container_layout.setSpacing(5)
-        scroll.setWidget(self.container)
 
-        self.rows: list[ExpensesPlanRow] = []
-        self.expenses_plans: list[ExpensesPlan]
-
-    def clear(self):
-        for i in reversed(range(self.container_layout.count())):
-            widget = self.container_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)  # détache du layout
-        self.rows = []
-        self.expenses_plans = []
-
-    def load(self):
-        self.clear()
-        
-        self.expenses_plans: list[ExpensesPlan] = [ExpensesPlan(**data) for data in expensesPlanService.get_all()]
-
-        for exp_plan in self.expenses_plans:
-            row = ExpensesPlanRow(exp_plan)
-
-            row.row_clicked.connect(lambda epid=exp_plan.expensesplan_id: self.show_expense_detail(epid))
-
-            self.container_layout.addWidget(row)
-            self.rows.append(row)
-
-        self.container_layout.setAlignment(Qt.AlignTop)
-        self.updated_table.emit()
-
-        # resizing
-        if self.rows:
-            column_keys = [name for name, widget in self.rows[0].widgets]
-            max_widths = {key: 0 for key in column_keys}
-
-            # Calculer la largeur max de chaque colonne
-            for row in self.rows:
-                for w_name, widget in row.widgets:
-                    widget_width = widget.sizeHint().width()
-                    if widget_width > max_widths[w_name]:
-                        max_widths[w_name] = widget_width
-
-            for row in self.rows:
-                row.resize_columns(max_widths)
-
-    def show_expense_detail(self, expenses_plan_id):
+    def _show_expenses_plan_detail(self, expenses_plan_id):
         dialog = ExpensesPlanDialog(parent=self.window(), expenses_plan_id=expenses_plan_id)
-        dialog.expenses_plan_updated.connect(lambda epid: self.load())
-        dialog.expenses_plan_deleted.connect(lambda epid: self.load())
+        dialog.expenses_plan_updated.connect(lambda epid: self.updated_table.emit())
+        dialog.expenses_plan_deleted.connect(lambda epid: self.updated_table.emit())
         dialog.exec()
 
 

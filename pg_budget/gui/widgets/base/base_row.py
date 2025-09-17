@@ -70,7 +70,7 @@ class BaseRow(QFrame):
         if clicked_widget in interactive_widgets:
             return super().mousePressEvent(event)
 
-        self.row_clicked.emit(self.row_id)
+        self.row_clicked.emit()
         return super().mousePressEvent(event)
     
     def resize_columns(self, width: dict):
