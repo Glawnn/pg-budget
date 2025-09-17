@@ -10,10 +10,6 @@ def main():
     """main entry point"""
     app = QApplication(sys.argv)
 
-    # Charger le style
-    # with open("pg_budget/gui/styles/main_style.qss", "r") as f:
-    #  app.setStyleSheet(f.read())
-
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
