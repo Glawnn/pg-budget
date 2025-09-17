@@ -35,3 +35,7 @@ format = "dev_tools.scripts:format"
 test = "dev_tools.scripts:test"
 test_e2e = "dev_tools.scripts:test_e2e"
 test_unit = "dev_tools.scripts:test_unit"
+
+format-dt = "dev_tools.scripts:format_dev_tools"
+
+build = "dev_tools.scripts:build"

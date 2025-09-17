@@ -18,6 +18,7 @@ from pg_budget.core.db import db
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
+from pg_budget.utils import resource_path
 
 
 __version__ = "v" + version("pg-budget")
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self._init()
 
     def _init(self):
-        with open("pg_budget/gui/styles/light_style.qss", "r", encoding="utf-8") as file:
+        with open(resource_path("pg_budget/gui/styles/light_style.qss"), "r", encoding="utf-8") as file:
             qss = file.read()
             self.setStyleSheet(qss)
 
