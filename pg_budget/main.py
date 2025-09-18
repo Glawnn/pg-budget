@@ -10,7 +10,10 @@ from pg_budget.logger_setup import logger
 def main():
     """main entry point"""
 
+    logger.info("=" * 60)
     logger.info("Starting PG-Budget application")
+    logger.info("=" * 60)
+
     exit_code = 0
     try:
         app = QApplication(sys.argv)
@@ -27,11 +30,15 @@ def main():
 
     except KeyboardInterrupt:
         logger.info("Application interrupted by user (Ctrl+C).")
+        exit_code = 0
     except Exception:  # pylint: disable=broad-exception-caught
-        logger.error("Exception occurred in main entry point", exc_info=True)
+        logger.exception("Exception occurred in main entry point")
         exit_code = 1
     finally:
+        logger.info("=" * 60)
         logger.info("Application exited with code %d", exit_code)
+        logger.info("=" * 60)
+
         sys.exit(exit_code)
 
 
