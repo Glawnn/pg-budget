@@ -1,7 +1,6 @@
 """Main window"""
 
 import os
-from importlib.metadata import version
 
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -22,7 +21,7 @@ from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 from pg_budget.utils import resource_path
 
 
-__version__ = "v" + version("pg-budget")
+from pg_budget.utils import __version__
 
 
 class MainWindow(QMainWindow):
