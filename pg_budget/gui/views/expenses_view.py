@@ -1,29 +1,22 @@
 """View for Expenses"""
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout
-
 from pg_budget.core.services import expenseService
+from pg_budget.gui.views.base_view import BaseView
 from pg_budget.gui.widgets.expenses_table import ExpensesTable
 from pg_budget.gui.widgets.month_year_picker import MonthYearPicker
 
 
-class ExpensesView(QWidget):
+class ExpensesView(BaseView):
     """View for Expenses"""
 
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
-        self.setLayout(layout)
-
+    def _init(self):
         self.month_year_picker = MonthYearPicker()
-        layout.addWidget(self.month_year_picker)
+        self._layout.addWidget(self.month_year_picker)
 
         self.expense_table = ExpensesTable()
-        self.load()
-        layout.addWidget(self.expense_table)
+        self._layout.addWidget(self.expense_table)
         self.expense_table.updated_table.connect(self.load)
+        self.month_year_picker.month_changed.connect(self.load)
 
     def load(self):
         """Load / reload all elements on view"""

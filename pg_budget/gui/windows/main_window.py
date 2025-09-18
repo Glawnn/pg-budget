@@ -1,6 +1,8 @@
 """Main window"""
 
 import os
+from importlib.metadata import version
+
 from PySide6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
@@ -11,7 +13,6 @@ from PySide6.QtWidgets import (
     QMenu,
 )
 from PySide6.QtGui import QAction
-from importlib.metadata import version
 
 
 from pg_budget.core.db import db
@@ -31,6 +32,12 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle(f"PG-Budget {__version__}")
         self.resize(800, 400)
+
+        self.stacked_widget = None
+        self.stacked_widget = None
+        self.expenses_view = None
+        self.expenses_plan_view = None
+        self.status_bar = None
 
         self._init()
 
@@ -56,10 +63,12 @@ class MainWindow(QMainWindow):
         # --- Vue 1 : Expenses ---
         self.expenses_view = ExpensesView()
         self.stacked_widget.addWidget(self.expenses_view)
+        self.expenses_view.load()
 
         # --- Vue 2 : Expenses Plan ---
         self.expenses_plan_view = ExpensesPlanView()
         self.stacked_widget.addWidget(self.expenses_plan_view)
+        self.expenses_plan_view.load()
 
     def _create_status_bar(self):
         self.status_bar = self.statusBar()
