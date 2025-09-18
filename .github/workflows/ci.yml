@@ -36,10 +36,10 @@ jobs:
       - name: Run lint
         run: poetry run lint
 
-      - name: Run unit 
-        run: poetry run test_unit
+      - name: Run unit tests & coverage
+        run: poetry run test-cov
       
-      - name: Run unit 
-        run: poetry run test_e2e
+      - name: Run e2e tests 
+        run: poetry run test-e2e
         env:
           QT_QPA_PLATFORM: offscreen

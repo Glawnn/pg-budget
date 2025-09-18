@@ -23,6 +23,7 @@ pylint = "^3.3.8"
 flake8 = "^7.3.0"
 pyinstaller = "^6.16.0"
 black = "^25.1.0"
+pytest-cov = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -33,8 +34,9 @@ pg-budget = "pg_budget.main:main"
 lint = "dev_tools.scripts:lint"
 format = "dev_tools.scripts:format"
 test = "dev_tools.scripts:test"
-test_e2e = "dev_tools.scripts:test_e2e"
-test_unit = "dev_tools.scripts:test_unit"
+test-e2e = "dev_tools.scripts:test_e2e"
+test-unit = "dev_tools.scripts:test_unit"
+test-cov = "dev_tools.scripts:test_cov"
 
 format-dt = "dev_tools.scripts:format_dev_tools"
 

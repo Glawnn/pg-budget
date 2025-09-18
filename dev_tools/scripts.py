@@ -14,6 +14,8 @@ DEV_TOOLS = "dev_tools"
 BLACK_MAX_LINE_LENGTH = 120
 FLAKE8_MAX_LINE_LENGTH = 120
 
+COVERAGE_FAIL_UNDER = 30
+
 RED = "\033[31m"
 GREEN = "\033[32m"
 YELLOW = "\033[33m"
@@ -72,6 +74,35 @@ def test_e2e():
 def test():
     test_unit()
     test_e2e()
+
+
+def test_cov():
+    """Run unit tests with coverage, generate HTML report, fail if below threshold"""
+    print("\n==> Running unit tests with coverage ...")
+
+    cmd = [
+        sys.executable,
+        "-m",
+        "pytest",
+        "-k",
+        "unit",
+        "--cov=pg_budget",
+        f"--cov-fail-under={COVERAGE_FAIL_UNDER}",
+        "--cov-report=term",
+        TESTS,
+        "-v",
+    ]
+
+    result = subprocess.run(cmd)
+    exit_code = result.returncode
+
+    print("\n==> Generating HTML coverage report ...")
+    run([sys.executable, "-m", "coverage", "html"])
+    print("Open htmlcov/index.html in your browser to see the report ✅")
+
+    if exit_code != 0:
+        print(f"\n{RED}Coverage threshold not met or tests failed! ❌{RESET}")
+        sys.exit(exit_code)
 
 
 def build():
