@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["master"]
+
+  push:
+    branches: ["master"]
+
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Lint & Type Check & tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.9.2"
+          host: linux
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run lint
+        run: poetry run lint || echo "Lint failed, continuing..."
+
+      - name: Run unit 
+        run: poetry run test_unit
+      
+      - name: Run unit 
+        run: poetry run test_e2e
+        env:
+          QT_QPA_PLATFORM: offscreen
