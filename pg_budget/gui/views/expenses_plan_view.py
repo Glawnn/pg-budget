@@ -1,25 +1,18 @@
 """View for Expenses Plans"""
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout
-
 from pg_budget.core.models.expenses_plan import ExpensesPlan
 from pg_budget.core.services import expensesPlanService
+from pg_budget.gui.views.base_view import BaseView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanTable
 
 
-class ExpensesPlanView(QWidget):
+class ExpensesPlanView(BaseView):
     """class view for Expenses Plan"""
 
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
-        self.setLayout(layout)
+    def _init(self):
 
         self.expense_plan_table = ExpensesPlanTable()
-        self.load()
-        layout.addWidget(self.expense_plan_table)
+        self._layout.addWidget(self.expense_plan_table)
         self.expense_plan_table.updated_table.connect(self.load)
 
     def load(self):

@@ -34,7 +34,7 @@ jobs:
         run: poetry install
 
       - name: Run lint
-        run: poetry run lint || echo "Lint failed, continuing..."
+        run: poetry run lint
 
       - name: Run unit 
         run: poetry run test_unit

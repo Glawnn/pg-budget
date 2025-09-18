@@ -11,7 +11,7 @@ class TestDatabaseFile:
     def setup(self, qtbot):
         """Instancie la fenêtre principale avant chaque test"""
         self.main_window = MainWindow()
-        qtbot.addWidget(self.main_window)  # assure que la fenêtre vit le temps du test
+        qtbot.addWidget(self.main_window)
         self.main_window.show()
         qtbot.wait(1000)
 
