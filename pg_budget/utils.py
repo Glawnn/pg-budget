@@ -2,6 +2,9 @@
 
 import os
 import sys
+from importlib.metadata import version
+
+__version__ = "v" + version("pg-budget")
 
 
 def resource_path(relative_path):
