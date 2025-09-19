@@ -18,6 +18,7 @@ from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
 from pg_budget.gui.widgets.expense_row import ExpenseRow
 from pg_budget.gui.widgets.text_edit import TextEdit
+from pg_budget.gui import logger
 
 
 class ExpensesTable(BaseTable):
@@ -25,19 +26,24 @@ class ExpensesTable(BaseTable):
 
     def __init__(self):
         super().__init__(ExpenseRow)
+        logger.debug("ExpensesTable initialized")
 
     def _init_row_connections(self, row: ExpenseRow):
         row.paid_changed.connect(safe_callback(lambda value, eid=row.row_id: self._on_paid_changed(eid, value)))
         row.row_clicked.connect(safe_callback(lambda eid=row.row_id: self._show_expense_detail(eid)))
 
     def _on_paid_changed(self, expense_id: str, paid: bool):
+        logger.info("Updating expense ID %s: payed=%s", expense_id, paid)
         expenseService.update(expense_id, payed=paid)
         self.updated_table.emit()
+        logger.debug("Updated signal emitted for expense ID %s", expense_id)
 
     def _show_expense_detail(self, eid):
+        logger.info("Opening ExpenseDialog for ID %s", eid)
         dialog = ExpenseDialog(parent=self.window(), expense_id=eid)
         dialog.updated.connect(safe_callback(lambda eid: self.updated_table.emit()))
         dialog.exec()
+        logger.debug("ExpenseDialog closed for ID %s", eid)
 
 
 class ExpenseDialog(BaseDialog):
@@ -45,9 +51,11 @@ class ExpenseDialog(BaseDialog):
 
     def __init__(self, expense_id=None, parent=None):
         super().__init__(expense_id, parent, fixed_size=(300, 300))
+        logger.debug("ExpenseDialog initialized with ID %s", expense_id)
 
     def _init_form(self, form_layout):
         expense: Expense = expenseService.get_by_id(self.entity_id) if self.entity_id else None
+        logger.info("Loaded Expense ID %s: %s", self.entity_id, expense.__dict__ if expense else "None")
 
         self.name_input = QLineEdit(expense.name if expense else "")
         form_layout.addRow(QLabel("Name:"), self.name_input)
@@ -85,10 +93,16 @@ class ExpenseDialog(BaseDialog):
 
         if self.entity_id:
             expenseService.update(self.entity_id, **new_data)
+            logger.info("Updated Expense ID %s: %s", self.entity_id, new_data)
         else:
             self.entity_id = expenseService.create(**new_data).expense_id
+            logger.info("Created new Expense ID %s: %s", self.entity_id, new_data)
+
         self.updated.emit(self.entity_id)
+        logger.debug("ExpenseDialog emit updated signal for ID %s", self.entity_id)
         self.close()
+        logger.debug("ExpenseDialog closed after save for ID %s", self.entity_id)
 
     def _delete_entity(self):
         expenseService.delete(self.entity_id)
+        logger.info("Deleted Expense ID %s", self.entity_id)

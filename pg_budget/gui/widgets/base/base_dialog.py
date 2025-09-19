@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 
 from pg_budget.gui.utils import safe_callback
+from pg_budget.gui import logger
 
 
 class BaseDialog(QDialog):
@@ -23,6 +24,8 @@ class BaseDialog(QDialog):
         self.entity_id = entity_id
         self.setWindowModality(Qt.ApplicationModal)
         self.setFixedSize(*fixed_size)
+
+        logger.debug("Initializing BaseDialog for entity_id=%s", entity_id)
 
         self._layout = QVBoxLayout(self)
 
@@ -64,7 +67,8 @@ class BaseDialog(QDialog):
         raise NotImplementedError
 
     def _on_cancel_btn_clicked(self):
-        """"""
+        """cancel btn"""
+        logger.info("Cancel button clicked in BaseDialog for entity_id=%s", self.entity_id)
         self.close()
 
     def confirm_delete(self):
@@ -76,6 +80,9 @@ class BaseDialog(QDialog):
             QMessageBox.Yes | QMessageBox.No,
         )
         if reply == QMessageBox.Yes:
+            logger.info("User confirmed deletion for entity_id=%s", self.entity_id)
             self._delete_entity()
             self.updated.emit(self.entity_id)
             self.accept()
+        else:
+            logger.debug("User canceled deletion for entity_id=%s", self.entity_id)

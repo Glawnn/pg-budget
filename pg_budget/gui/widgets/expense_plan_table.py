@@ -16,6 +16,7 @@ from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
 from pg_budget.gui.widgets.expense_plan_row import ExpensesPlanRow
 from pg_budget.gui.widgets.text_edit import TextEdit
+from pg_budget.gui import logger
 
 
 class ExpensesPlanTable(BaseTable):
@@ -23,14 +24,17 @@ class ExpensesPlanTable(BaseTable):
 
     def __init__(self):
         super().__init__(ExpensesPlanRow)
+        logger.debug("ExpensesPlanTable initialized")
 
     def _init_row_connections(self, row):
         row.row_clicked.connect(safe_callback(lambda eid=row.row_id: self._show_expenses_plan_detail(eid)))
 
     def _show_expenses_plan_detail(self, expenses_plan_id):
+        logger.info("Opening ExpensesPlanDialog for ID %s", expenses_plan_id)
         dialog = ExpensesPlanDialog(parent=self.window(), expenses_plan_id=expenses_plan_id)
         dialog.updated.connect(safe_callback(lambda eid: self.updated_table.emit()))
         dialog.exec()
+        logger.debug("ExpensesPlanDialog closed for ID %s", expenses_plan_id)
 
 
 class ExpensesPlanDialog(BaseDialog):
@@ -38,9 +42,13 @@ class ExpensesPlanDialog(BaseDialog):
 
     def __init__(self, expenses_plan_id=None, parent=None):
         super().__init__(expenses_plan_id, parent, fixed_size=(300, 300))
+        logger.debug("ExpensesPlanDialog initialized with ID %s", expenses_plan_id)
 
     def _init_form(self, form_layout):
         expenses_plan: ExpensesPlan = expensesPlanService.get_by_id(self.entity_id)
+        logger.info(
+            "Loaded ExpensesPlan ID %s: %s", self.entity_id, expenses_plan.__dict__ if expenses_plan else "None"
+        )
 
         self.name_input = QLineEdit(expenses_plan.name if expenses_plan else "")
         form_layout.addRow(QLabel("Name:"), self.name_input)
@@ -103,10 +111,16 @@ class ExpensesPlanDialog(BaseDialog):
 
         if self.entity_id:
             expensesPlanService.update(self.entity_id, **new_data)
+            logger.info("Updated ExpensesPlan ID %s: %s", self.entity_id, new_data)
         else:
             self.entity_id = expensesPlanService.create(**new_data).expensesplan_id
+            logger.info("Created new ExpensesPlan ID %s: %s", self.entity_id, new_data)
+
         self.updated.emit(self.entity_id)
+        logger.debug("ExpensesPlanDialog emit updated signal for ID %s", self.entity_id)
         self.close()
+        logger.debug("ExpensesPlanDialog closed after save for ID %s", self.entity_id)
 
     def _delete_entity(self):
         expensesPlanService.delete(self.entity_id)
+        logger.info("Deleted ExpensesPlan ID %s", self.entity_id)

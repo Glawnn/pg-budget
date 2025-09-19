@@ -1,5 +1,6 @@
 """Formatters for logging"""
 
+import traceback
 import logging
 
 
@@ -10,4 +11,8 @@ class SimpleFormatter(logging.Formatter):
         time = self.formatTime(record, "%H:%M:%S")
         level = record.levelname.ljust(8)
         name = record.name
-        return f"[{time}] {level} {name}: {record.getMessage()}"
+        msg = record.getMessage()
+        if record.exc_info:
+            exc_text = "".join(traceback.format_exception(*record.exc_info))
+            msg = f"{msg}\n{exc_text}"
+        return f"[{time}] {level} {name}: {msg}"
