@@ -3,6 +3,7 @@
 from PySide6.QtWidgets import QCheckBox
 from PySide6.QtCore import Signal
 
+from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
 from pg_budget.core.models.expense import Expense
 
@@ -26,4 +27,4 @@ class ExpenseRow(BaseRow):
     def _init_connections(self):
         paid_checkbox: QCheckBox = self.get_widget_by_name("Paid")
         if paid_checkbox:
-            paid_checkbox.stateChanged.connect(lambda state: self.paid_changed.emit(state == 2))
+            paid_checkbox.stateChanged.connect(safe_callback(lambda state: self.paid_changed.emit(state == 2)))

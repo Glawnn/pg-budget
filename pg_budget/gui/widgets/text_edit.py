@@ -3,6 +3,8 @@
 from PySide6.QtWidgets import QWidget, QTextEdit, QLabel, QVBoxLayout, QSizePolicy
 from PySide6.QtCore import Qt
 
+from pg_budget.gui.utils import safe_callback
+
 
 class TextEdit(QWidget):
     """Widget text edit"""
@@ -34,7 +36,7 @@ class TextEdit(QWidget):
 
         self._update_height()
 
-        self.text_edit.textChanged.connect(self._enforce_limits)
+        self.text_edit.textChanged.connect(safe_callback(self._enforce_limits))
         self._enforce_limits()
 
     def _update_height(self):

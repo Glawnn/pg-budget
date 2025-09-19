@@ -4,6 +4,8 @@ from datetime import datetime
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QComboBox, QPushButton
 from PySide6.QtCore import Signal
 
+from pg_budget.gui.utils import safe_callback
+
 
 class MonthYearPicker(QWidget):
     """class widget for month/year"""
@@ -19,7 +21,7 @@ class MonthYearPicker(QWidget):
 
         self.prev_button = QPushButton("◀")
         self.prev_button.setFixedWidth(30)
-        self.prev_button.clicked.connect(self.prev_month)
+        self.prev_button.clicked.connect(safe_callback(self.prev_month))
         layout.addWidget(self.prev_button)
 
         self.month_selector = QComboBox()
@@ -50,16 +52,16 @@ class MonthYearPicker(QWidget):
 
         self.next_button = QPushButton("▶")
         self.next_button.setFixedWidth(30)
-        self.next_button.clicked.connect(self.next_month)
+        self.next_button.clicked.connect(safe_callback(self.next_month))
         layout.addWidget(self.next_button)
 
         self.today_button = QPushButton("Today")
         self.today_button.setFixedWidth(60)
-        self.today_button.clicked.connect(self.go_to_today)
+        self.today_button.clicked.connect(safe_callback(self.go_to_today))
         layout.addWidget(self.today_button)
 
-        self.month_selector.currentIndexChanged.connect(self._emit_signal)
-        self.year_selector.currentIndexChanged.connect(self._emit_signal)
+        self.month_selector.currentIndexChanged.connect(safe_callback(self._emit_signal))
+        self.year_selector.currentIndexChanged.connect(safe_callback(self._emit_signal))
 
     def _emit_signal(self):
         year = int(self.year_selector.currentText())

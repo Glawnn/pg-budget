@@ -13,6 +13,7 @@ from PySide6.QtCore import QDate
 
 from pg_budget.core.models.expense import Expense
 from pg_budget.core.services import expenseService
+from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
 from pg_budget.gui.widgets.expense_row import ExpenseRow
@@ -26,8 +27,8 @@ class ExpensesTable(BaseTable):
         super().__init__(ExpenseRow)
 
     def _init_row_connections(self, row: ExpenseRow):
-        row.paid_changed.connect(lambda value, eid=row.row_id: self._on_paid_changed(eid, value))
-        row.row_clicked.connect(lambda eid=row.row_id: self._show_expense_detail(eid))
+        row.paid_changed.connect(safe_callback(lambda value, eid=row.row_id: self._on_paid_changed(eid, value)))
+        row.row_clicked.connect(safe_callback(lambda eid=row.row_id: self._show_expense_detail(eid)))
 
     def _on_paid_changed(self, expense_id: str, paid: bool):
         expenseService.update(expense_id, payed=paid)
@@ -35,7 +36,7 @@ class ExpensesTable(BaseTable):
 
     def _show_expense_detail(self, eid):
         dialog = ExpenseDialog(parent=self.window(), expense_id=eid)
-        dialog.updated.connect(lambda eid: self.updated_table.emit())
+        dialog.updated.connect(safe_callback(lambda eid: self.updated_table.emit()))
         dialog.exec()
 
 
