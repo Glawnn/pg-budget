@@ -5,13 +5,14 @@ from PySide6.QtWidgets import QApplication
 
 from pg_budget.gui.windows import MainWindow
 from pg_budget.logger_setup import logger
+from pg_budget.utils import __version__
 
 
 def main():
     """main entry point"""
 
     logger.info("=" * 60)
-    logger.info("Starting PG-Budget application")
+    logger.info("Starting PG-Budget application %s", __version__)
     logger.info("=" * 60)
 
     exit_code = 0

@@ -19,6 +19,7 @@ from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
+from pg_budget.gui import logger
 from pg_budget.utils import resource_path
 
 
@@ -39,15 +40,19 @@ class MainWindow(QMainWindow):
         self.expenses_plan_view = None
         self.status_bar = None
 
+        logger.debug("Initializing MainWindow")
         self._init()
 
     def _init(self):
-        with open(resource_path("pg_budget/gui/styles/light_style.qss"), "r", encoding="utf-8") as file:
+        qss_path = "pg_budget/gui/styles/light_style.qss"
+        with open(resource_path(qss_path), "r", encoding="utf-8") as file:
             qss = file.read()
             self.setStyleSheet(qss)
+            logger.debug("Applied QSS style from %s", qss_path)
 
         self.menu = AppMenu(self)
         self.menu.init_menu_bar()
+        logger.info("Menu bar initialized")
 
         self._create_central_widget()
         self._create_status_bar()
@@ -59,20 +64,24 @@ class MainWindow(QMainWindow):
 
         self.stacked_widget = QStackedWidget()
         layout.addWidget(self.stacked_widget)
+        logger.debug("Central widget and stacked widget created")
 
         # --- Vue 1 : Expenses ---
         self.expenses_view = ExpensesView()
         self.stacked_widget.addWidget(self.expenses_view)
         self.expenses_view.load()
+        logger.info("ExpensesView loaded")
 
         # --- Vue 2 : Expenses Plan ---
         self.expenses_plan_view = ExpensesPlanView()
         self.stacked_widget.addWidget(self.expenses_plan_view)
         self.expenses_plan_view.load()
+        logger.info("ExpensesPlanView loaded")
 
     def _create_status_bar(self):
         self.status_bar = self.statusBar()
         self.status_bar.showMessage("Ready")
+        logger.debug("Status bar created and ready")
 
 
 class AppMenu:

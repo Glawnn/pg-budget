@@ -63,7 +63,7 @@ class MonthYearPicker(QWidget):
         self.month_selector.currentIndexChanged.connect(safe_callback(self._emit_signal))
         self.year_selector.currentIndexChanged.connect(safe_callback(self._emit_signal))
 
-    def _emit_signal(self):
+    def _emit_signal(self, *_):
         year = int(self.year_selector.currentText())
         month = self.month_selector.currentIndex() + 1
         self.month_changed.emit(year, month)

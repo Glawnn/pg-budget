@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any, Type
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QCheckBox, QLabel, QComboBox, QWidget
 from PySide6.QtCore import Signal
+from pg_budget.gui import logger
 
 
 @dataclass
@@ -86,6 +87,7 @@ class BaseRow(QFrame):
         if clicked_widget in interactive_widgets:
             return super().mousePressEvent(event)
 
+        logger.debug("Row clicked: %s", self.row_id)
         self.row_clicked.emit()
         return super().mousePressEvent(event)
 

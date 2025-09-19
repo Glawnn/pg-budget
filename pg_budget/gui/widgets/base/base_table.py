@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QFrame
 from PySide6.QtCore import Qt, Signal
 
 from pg_budget.gui.widgets.base import BaseRow
+from pg_budget.gui import logger
 
 
 class BaseTable(QFrame):
@@ -32,6 +33,7 @@ class BaseTable(QFrame):
 
     def clear(self):
         """Clear all elements of the table content"""
+        logger.debug("Clearing BaseTable rows (%d rows)", len(self.rows))
         for i in reversed(range(self.container_layout.count())):
             widget = self.container_layout.itemAt(i).widget()
             if widget:
@@ -59,6 +61,7 @@ class BaseTable(QFrame):
             self.rows.append(row)
 
         self.container_layout.setAlignment(Qt.AlignTop)
+        logger.debug("Loaded BaseTable with %d rows", len(self.rows))
 
         self.resizing()
 

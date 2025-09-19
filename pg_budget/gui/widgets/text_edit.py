@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QWidget, QTextEdit, QLabel, QVBoxLayout, QSizePoli
 from PySide6.QtCore import Qt
 
 from pg_budget.gui.utils import safe_callback
+from pg_budget.gui import logger
 
 
 class TextEdit(QWidget):
@@ -13,6 +14,8 @@ class TextEdit(QWidget):
         super().__init__(parent)
         self.lines_number = lines_number
         self.max_chars = max_chars
+
+        logger.debug("Initializing TextEdit widget: lines=%d, max_chars=%s", lines_number, max_chars)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -45,6 +48,7 @@ class TextEdit(QWidget):
         line_height = font_metrics.lineSpacing()
         height = self.lines_number * line_height + 10 * self.text_edit.frameWidth()
         self.text_edit.setFixedHeight(height)
+        logger.debug("TextEdit height set to %d", height)
 
     def _enforce_limits(self):
         """Enforce max characters and update counter."""
@@ -56,6 +60,7 @@ class TextEdit(QWidget):
             # Restore cursor position safely
             cursor.setPosition(min(pos, self.max_chars))
             self.text_edit.setTextCursor(cursor)
+            logger.info("TextEdit content truncated to max_chars=%d", self.max_chars)
 
         # Update counter
         if self.max_chars:
