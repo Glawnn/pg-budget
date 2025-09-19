@@ -1,6 +1,7 @@
 """View for Expenses"""
 
 from pg_budget.core.services import expenseService
+from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views.base_view import BaseView
 from pg_budget.gui.widgets.expenses_table import ExpensesTable
 from pg_budget.gui.widgets.month_year_picker import MonthYearPicker
@@ -15,8 +16,8 @@ class ExpensesView(BaseView):
 
         self.expense_table = ExpensesTable()
         self._layout.addWidget(self.expense_table)
-        self.expense_table.updated_table.connect(self.load)
-        self.month_year_picker.month_changed.connect(self.load)
+        self.expense_table.updated_table.connect(safe_callback(self.load))
+        self.month_year_picker.month_changed.connect(safe_callback(self.load))
 
     def load(self):
         """Load / reload all elements on view"""

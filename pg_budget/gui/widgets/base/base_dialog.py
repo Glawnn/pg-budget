@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
+from pg_budget.gui.utils import safe_callback
+
 
 class BaseDialog(QDialog):
     """Base class for dialog"""
@@ -38,18 +40,18 @@ class BaseDialog(QDialog):
         """tmp"""
         btn_layout = QHBoxLayout()
         save_btn = QPushButton("Save")
-        save_btn.clicked.connect(self._on_save_btn_clicked)
+        save_btn.clicked.connect(safe_callback(self._on_save_btn_clicked))
         btn_layout.addWidget(save_btn)
 
         cancel_btn = QPushButton("Cancel")
-        cancel_btn.clicked.connect(self._on_cancel_btn_clicked)
+        cancel_btn.clicked.connect(safe_callback(self._on_cancel_btn_clicked))
         btn_layout.addWidget(cancel_btn)
 
         self._layout.addLayout(btn_layout)
 
         if self.entity_id:
             deleted_btn = QPushButton("Deleted")
-            deleted_btn.clicked.connect(self.confirm_delete)
+            deleted_btn.clicked.connect(safe_callback(self.confirm_delete))
             deleted_btn.setStyleSheet("background-color: red")
             self._layout.addWidget(deleted_btn)
 

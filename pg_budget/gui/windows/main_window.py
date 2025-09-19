@@ -15,6 +15,7 @@ from PySide6.QtGui import QAction
 
 
 from pg_budget.core.db import db
+from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
@@ -90,15 +91,15 @@ class AppMenu:
         file_menu: QMenu = self.main_window.menuBar().addMenu("File")
 
         new_db_action = QAction("New User", self.main_window)
-        new_db_action.triggered.connect(lambda: self.select_database(create=True))
+        new_db_action.triggered.connect(safe_callback(lambda: self.select_database(create=True)))
         file_menu.addAction(new_db_action)
 
         open_db_action = QAction("Open User", self.main_window)
-        open_db_action.triggered.connect(lambda: self.select_database(create=False))
+        open_db_action.triggered.connect(safe_callback(lambda: self.select_database(create=False)))
         file_menu.addAction(open_db_action)
 
         exit_action = QAction("Exit", self.main_window)
-        exit_action.triggered.connect(self.main_window.close)
+        exit_action.triggered.connect(safe_callback(self.main_window.close))
         file_menu.addAction(exit_action)
 
     def select_database(self, create: bool = False):
@@ -137,15 +138,15 @@ class AppMenu:
         actions_menu: QMenu = self.main_window.menuBar().addMenu("Actions")
 
         add_expense = QAction("Add Expense", self.main_window)
-        add_expense.triggered.connect(self.create_expense)
+        add_expense.triggered.connect(safe_callback(self.create_expense))
         actions_menu.addAction(add_expense)
 
         add_expense_plan = QAction("Add Expenses Plan", self.main_window)
-        add_expense_plan.triggered.connect(self.create_expenses_plan)
+        add_expense_plan.triggered.connect(safe_callback(self.create_expenses_plan))
         actions_menu.addAction(add_expense_plan)
 
         add_input = QAction("Add Input", self.main_window)
-        add_input.triggered.connect(lambda: print("add input -> to be implemented"))
+        add_input.triggered.connect(safe_callback(lambda: print("add input -> to be implemented")))
         actions_menu.addAction(add_input)
 
     def create_expense(self):
@@ -168,12 +169,12 @@ class AppMenu:
 
         show_expenses = QAction("Expenses View", self.main_window)
         show_expenses.triggered.connect(
-            lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view)
+            safe_callback(lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view))
         )
         view_menu.addAction(show_expenses)
 
         show_other = QAction("ExpensesPlan View", self.main_window)
         show_other.triggered.connect(
-            lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view)
+            safe_callback(lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view))
         )
         view_menu.addAction(show_other)
