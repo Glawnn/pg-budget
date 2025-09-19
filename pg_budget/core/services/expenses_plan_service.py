@@ -7,6 +7,7 @@ from pg_budget.core.models.expense import Expense
 from pg_budget.core.models.expenses_plan import ExpensesPlan
 from pg_budget.core.services.crud_services import CRUDService
 from pg_budget.core.services.expense_service import ExpenseService
+from pg_budget.core import logger
 
 
 class ExpensesPlanService(CRUDService):
@@ -19,11 +20,15 @@ class ExpensesPlanService(CRUDService):
     def create(self, **kwargs):
         """custom create plan"""
         plan = super().create(**kwargs)
+        logger.info("Created new expense plan: %s", plan.name)
 
         expenses = self._generate_expenses(plan)
 
+        logger.debug("Generated %d expenses for plan '%s'", len(expenses), plan.name)
+
         for expense in expenses:
             self.expense_service.create(**expense.to_dict())
+            logger.debug("Created expense '%s' on %s", expense.name, expense.date)
 
         return plan
 
@@ -55,6 +60,7 @@ class ExpensesPlanService(CRUDService):
             elif plan.frequency == "yearly":
                 current += relativedelta(years=1)
             else:
+                logger.error("Unknown frequency '%s' for plan '%s'", plan.frequency, plan.name)
                 raise ValueError(f"Unknown frequency: {plan.frequency}")
 
         return expenses
