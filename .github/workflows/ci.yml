@@ -26,6 +26,12 @@ jobs:
         with:
           version: "6.9.2"
           host: linux
+          
+      - name: Install French locale
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y locales
+          sudo locale-gen fr_FR.UTF-8
 
       - name: Install Poetry
         run: pip install poetry
@@ -40,6 +46,6 @@ jobs:
         run: poetry run test-cov
       
       - name: Run e2e tests 
-        run: poetry run test-e2e
+        run: poetry run test-e2e-fast
         env:
           QT_QPA_PLATFORM: offscreen

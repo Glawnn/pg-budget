@@ -35,9 +35,16 @@ lint = "dev_tools.scripts:lint"
 format = "dev_tools.scripts:format"
 test = "dev_tools.scripts:test"
 test-e2e = "dev_tools.scripts:test_e2e"
+test-e2e-fast = "dev_tools.scripts:test_e2e_fast"
 test-unit = "dev_tools.scripts:test_unit"
 test-cov = "dev_tools.scripts:test_cov"
 
 format-dt = "dev_tools.scripts:format_dev_tools"
 
 build = "dev_tools.scripts:build"
+
+[tool.pytest.ini_options]
+markers = [
+    "e2e: end-to-end tests",
+    "unit: unit tests"
+]

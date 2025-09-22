@@ -68,12 +68,15 @@ def test_unit():
 
 def test_e2e():
     print("\n==> Running e2e tests...")
+    run([sys.executable, "-m", "pytest", "-k", "e2e", TESTS, "-v", "--delay", "1000"])
+
+def test_e2e_fast():
+    print("\n==> Running e2e tests...")
     run([sys.executable, "-m", "pytest", "-k", "e2e", TESTS, "-v"])
 
 
 def test():
-    test_unit()
-    test_e2e()
+    run([sys.executable, "-m", "pytest", TESTS, "-v"])
 
 
 def test_cov():

@@ -14,7 +14,7 @@ from pg_budget.core.services import expensesPlanService
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
-from pg_budget.gui.widgets.expense_plan_row import ExpensesPlanRow
+from pg_budget.gui.widgets.expenses_plan_row import ExpensesPlanRow
 from pg_budget.gui.widgets.text_edit import TextEdit
 from pg_budget.gui import logger
 

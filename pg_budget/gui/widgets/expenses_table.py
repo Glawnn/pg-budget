@@ -51,7 +51,11 @@ class ExpenseDialog(BaseDialog):
 
     def __init__(self, expense_id=None, parent=None):
         super().__init__(expense_id, parent, fixed_size=(300, 300))
-        logger.debug("ExpenseDialog initialized with ID %s", expense_id)
+        if expense_id:
+            self.setWindowTitle("Update Expense")
+        else:
+            self.setWindowTitle("Create Expense")
+        logger.debug("ExpenseDialog %s, initialized with ID %s", self.windowTitle(), expense_id)
 
     def _init_form(self, form_layout):
         expense: Expense = expenseService.get_by_id(self.entity_id) if self.entity_id else None

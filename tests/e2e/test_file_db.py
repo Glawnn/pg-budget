@@ -3,23 +3,24 @@ import json
 import pytest
 
 from pg_budget.gui.windows.main_window import MainWindow
+from tests.e2e.utils import present_in_table
 
 
 @pytest.mark.usefixtures("qtbot")
 class TestDatabaseFile:
     @pytest.fixture(autouse=True)
-    def setup(self, qtbot):
+    def setup(self, qtbot, qbot_delay):
         """Instancie la fenêtre principale avant chaque test"""
         self.main_window = MainWindow()
         qtbot.addWidget(self.main_window)
         self.main_window.show()
-        qtbot.wait(1000)
+        qbot_delay()
 
         yield
 
         self.main_window.close()
 
-    def test_create_new_db(self, qtbot, mocker, tmp_path):
+    def test_create_new_db(self, qtbot, mocker, tmp_path, qbot_delay):
         test_db_path = tmp_path / "subfolder" / "test_budget_new.json"
 
         mocker.patch(
@@ -35,7 +36,7 @@ class TestDatabaseFile:
 
         # --- Déclencher l'action ---
         new_user_action.trigger()
-        qtbot.wait(500)
+        qbot_delay()
 
         # --- Vérifier que la DB a bien été créée ---
         assert test_db_path.exists(), "Le fichier DB n'a pas été créé"
@@ -49,9 +50,7 @@ class TestDatabaseFile:
         # --- Vérifier que la popup a été affichée ---
         mock_info.assert_called_once()
 
-    def test_load_existing_db(self, qtbot, mocker, tmp_path):
-        # --- Préparer un fichier DB temporaire avec une expense et un expense plan ---
-        test_db_path = tmp_path / "test_budget_load.json"
+    def test_load_existing_db(self, make_db, mocker, qbot_delay):
         db_data = {
             "expenses": [
                 {
@@ -76,9 +75,8 @@ class TestDatabaseFile:
             ],
             "categories": [],
         }
-        test_db_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(test_db_path, "w") as f:
-            json.dump(db_data, f, indent=4)
+
+        test_db_path = make_db(db_data)
 
         # --- Patcher QFileDialog pour ouvrir ce fichier ---
         mocker.patch(
@@ -95,17 +93,16 @@ class TestDatabaseFile:
 
         # --- Déclencher l’action ---
         open_user_action.trigger()
-        qtbot.wait(500)
+        qbot_delay()
 
         # --- Vérifier que les données sont chargées dans ExpensesView ---
-        expense_rows = self.main_window.expenses_view.expense_table.rows
-        assert len(expense_rows) == 1
-        assert self.main_window.expenses_view.expense_table.rows[0].get_widget_by_name("Name").text() == "Test Expense"
-        assert self.main_window.expenses_view.expense_table.rows[0].get_widget_by_name("Amount").text() == "123.45 €"
-        assert self.main_window.expenses_view.expense_table.rows[0].get_widget_by_name("Date").text() == "2025-09-01"
+        expense_table = self.main_window.expenses_view.expense_table
+        assert len(expense_table.rows) == 1
+
+        assert present_in_table(expense_table, {"Name": "Test Expense", "Amount": "123.45 €", "Date": "2025-09-01"})
 
         # --- Vérifier que les données sont chargées dans ExpensesPlanView ---
-        # plan_rows = self.main_window.expenses_plan_view.expenses_plan_table.rows
-        # assert len(plan_rows) == 1
-        # assert plan_rows[0].name_label.text() == "Test Plan"
-        # assert plan_rows[0].amount_label.text() == "500.00 €"
+        plan_table = self.main_window.expenses_plan_view.expenses_plan_table
+        assert len(plan_table.rows) == 1
+
+        assert present_in_table(plan_table, {"Name": "Test Plan", "Amount": "500.00 €"})

@@ -17,7 +17,7 @@ from PySide6.QtGui import QAction
 from pg_budget.core.db import db
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
-from pg_budget.gui.widgets.expense_plan_table import ExpensesPlanDialog
+from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 from pg_budget.gui import logger
 from pg_budget.utils import resource_path
