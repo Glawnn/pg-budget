@@ -81,7 +81,7 @@ class BaseRow(QFrame):
 
     def mousePressEvent(self, event):
         """Detect when row is clicked"""
-        clicked_widget = self.childAt(event.pos())
+        clicked_widget = self.childAt(event.position().toPoint())
 
         interactive_widgets = [w for w in self.widgets if isinstance(w, (QCheckBox, QComboBox))]
         if clicked_widget in interactive_widgets:
