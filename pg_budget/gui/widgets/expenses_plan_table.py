@@ -42,6 +42,10 @@ class ExpensesPlanDialog(BaseDialog):
 
     def __init__(self, expenses_plan_id=None, parent=None):
         super().__init__(expenses_plan_id, parent, fixed_size=(300, 300))
+        if expenses_plan_id:
+            self.setWindowTitle("Update Expenses Plan")
+        else:
+            self.setWindowTitle("Create Expenses Plan")
         logger.debug("ExpensesPlanDialog initialized with ID %s", expenses_plan_id)
 
     def _init_form(self, form_layout):
