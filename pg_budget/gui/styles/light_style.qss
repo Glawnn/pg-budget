@@ -41,6 +41,6 @@ ExpensesStats QLabel {
 }
 
 #AlreadyPaidLabel {
-    color: #7ee37e; /* vert clair */
+    color: #7ee37e;
 }
 

@@ -1,11 +1,19 @@
 import subprocess
 import sys
 from pathlib import Path
+from pg_budget.utils import __version__
 
+OS = ""
+if sys.platform.startswith("win"):
+    OS = "Windows"
+elif sys.platform.startswith("darwin"):
+    OS = "macOS"
+else:
+    OS = "Linux"
 
 APP_NAME = "pg-budget"
 ENTRY_POINT = "pg_budget/main.py"
-DIST_DIR = Path("dist")
+DIST_DIR = Path("dist") / OS
 
 PACKAGES = ["pg_budget"]
 TESTS = "tests"
@@ -24,6 +32,7 @@ MAGENTA = "\033[35m"
 CYAN = "\033[36m"
 RESET = "\033[0m"
 
+sys.stdout.reconfigure(encoding='utf-8')
 
 def run(cmd):
     """Run a command, stop on error"""
@@ -109,20 +118,28 @@ def test_cov():
 
 
 def build():
-    DIST_DIR.mkdir(exist_ok=True)
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
     if sys.platform.startswith("win"):
         sep = ";"
     else:
         sep = ":"
 
     add_data = f"pg_budget/gui/styles{sep}pg_budget/gui/styles"
+    binary_name = f"{APP_NAME}-{__version__}"
+
+    print(f"Building {binary_name}")
+    print(f"OS: {OS}")
+    print(f"Entry point: {ENTRY_POINT}")
+    print(f"Dist directory: {DIST_DIR}")
+    print(f"Extra data: {add_data}")
+
 
     cmd = [
         sys.executable,
         "-m",
         "PyInstaller",
         "--name",
-        APP_NAME,
+        "binary_name",
         "--onefile",
         "--add-data",
         add_data,
