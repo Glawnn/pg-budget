@@ -1,7 +1,5 @@
 """Main window"""
 
-import os
-
 from PySide6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
@@ -13,8 +11,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QAction
 
-
-from pg_budget.core.db import db
+from pg_budget.core.db import DATABASE_FOLDER, db
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanDialog
@@ -113,23 +110,24 @@ class AppMenu:
 
     def select_database(self, create: bool = False):
         """select the db"""
+
         if create:
             file_path, _ = QFileDialog.getSaveFileName(
                 self.main_window,
                 "Create New Database",
-                os.getcwd(),
+                DATABASE_FOLDER,
                 "JSON Files (*.json);;All Files (*)",
             )
         else:
             file_path, _ = QFileDialog.getOpenFileName(
                 self.main_window,
                 "Open Database",
-                os.getcwd(),
+                DATABASE_FOLDER,
                 "JSON Files (*.json);;All Files (*)",
             )
 
         if not file_path:
-            return  # annulé
+            return
 
         # Change la DB active
         db.set_path(file_path)

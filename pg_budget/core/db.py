@@ -2,6 +2,9 @@
 
 import json
 import os
+from platformdirs import user_documents_dir
+
+DATABASE_FOLDER = os.path.join(user_documents_dir(), "pg_budget")
 
 
 class Database:
@@ -47,4 +50,4 @@ class Database:
             json.dump(data, f, indent=4)
 
 
-db = Database("budget_db.json")
+db = Database(os.path.join(DATABASE_FOLDER, "default.json"))
