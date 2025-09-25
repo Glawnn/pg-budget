@@ -24,6 +24,7 @@ MAGENTA = "\033[35m"
 CYAN = "\033[36m"
 RESET = "\033[0m"
 
+sys.stdout.reconfigure(encoding='utf-8')
 
 def run(cmd):
     """Run a command, stop on error"""
