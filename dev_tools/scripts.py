@@ -139,7 +139,7 @@ def build():
         "-m",
         "PyInstaller",
         "--name",
-        "binary_name",
+        binary_name,
         "--onefile",
         "--add-data",
         add_data,
