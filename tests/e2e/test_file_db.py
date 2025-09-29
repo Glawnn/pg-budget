@@ -30,15 +30,12 @@ class TestDatabaseFile:
 
         mock_info = mocker.patch("pg_budget.gui.windows.main_window.QMessageBox.information")
 
-        # --- Récupérer directement l'action "New User" ---
         file_action = next(a for a in self.main_window.menuBar().actions() if a.text() == "File")
         new_user_action = next(a for a in file_action.menu().actions() if a.text() == "New User")
 
-        # --- Déclencher l'action ---
         new_user_action.trigger()
         qbot_delay()
 
-        # --- Vérifier que la DB a bien été créée ---
         assert test_db_path.exists(), "Le fichier DB n'a pas été créé"
 
         with open(test_db_path, "r") as f:
@@ -47,8 +44,8 @@ class TestDatabaseFile:
             assert "expensesplans" in data
             assert "categories" in data
 
-        # --- Vérifier que la popup a été affichée ---
         mock_info.assert_called_once()
+        assert "test_budget_new" in self.main_window.windowTitle()
 
     def test_load_existing_db(self, make_db, mocker, qbot_delay):
         db_data = {
@@ -78,30 +75,26 @@ class TestDatabaseFile:
 
         test_db_path = make_db(db_data)
 
-        # --- Patcher QFileDialog pour ouvrir ce fichier ---
         mocker.patch(
             "pg_budget.gui.windows.main_window.QFileDialog.getOpenFileName",
             return_value=(str(test_db_path), "JSON Files (*.json)"),
         )
 
-        # --- Patcher QMessageBox pour éviter la popup ---
         mocker.patch("pg_budget.gui.windows.main_window.QMessageBox.information")
 
-        # --- Récupérer l’action "Open User" ---
         file_action = next(a for a in self.main_window.menuBar().actions() if a.text() == "File")
         open_user_action = next(a for a in file_action.menu().actions() if a.text() == "Open User")
 
-        # --- Déclencher l’action ---
         open_user_action.trigger()
         qbot_delay()
 
-        # --- Vérifier que les données sont chargées dans ExpensesView ---
+        assert "test_budget_load" in self.main_window.windowTitle()
+
         expense_table = self.main_window.expenses_view.expense_table
         assert len(expense_table.rows) == 1
 
         assert present_in_table(expense_table, {"Name": "Test Expense", "Amount": "123.45 €", "Date": "2025-09-01"})
 
-        # --- Vérifier que les données sont chargées dans ExpensesPlanView ---
         plan_table = self.main_window.expenses_plan_view.expenses_plan_table
         assert len(plan_table.rows) == 1
 

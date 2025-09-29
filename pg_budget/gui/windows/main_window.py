@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QMenu,
 )
 from PySide6.QtGui import QAction
+from PySide6.QtCore import Signal, QObject
 
 from pg_budget.core.db import DATABASE_FOLDER, db
 from pg_budget.gui.utils import safe_callback
@@ -28,7 +29,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(f"PG-Budget {__version__}")
+        self.update_window_title()
         self.resize(800, 400)
 
         self.stacked_widget = None
@@ -49,6 +50,7 @@ class MainWindow(QMainWindow):
 
         self.menu = AppMenu(self)
         self.menu.init_menu_bar()
+        self.menu.database_changed.connect(safe_callback(self.update_window_title))
         logger.info("Menu bar initialized")
 
         self._create_central_widget()
@@ -80,11 +82,18 @@ class MainWindow(QMainWindow):
         self.status_bar.showMessage("Ready")
         logger.debug("Status bar created and ready")
 
+    def update_window_title(self):
+        """Refresh the name window"""
+        self.setWindowTitle(f"PG-Budget {__version__} - {db.get_username()}")
 
-class AppMenu:
+
+class AppMenu(QObject):
     """class for manage menu"""
 
+    database_changed = Signal()
+
     def __init__(self, main_window: MainWindow):
+        super().__init__()
         self.main_window = main_window
 
     def init_menu_bar(self):
@@ -131,6 +140,7 @@ class AppMenu:
 
         # Change la DB active
         db.set_path(file_path)
+        self.database_changed.emit()
 
         msg = "New database created" if create else "Database loaded"
         QMessageBox.information(self.main_window, "Database", f"{msg}:\n{file_path}")

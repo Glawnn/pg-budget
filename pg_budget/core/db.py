@@ -2,6 +2,7 @@
 
 import json
 import os
+from pathlib import Path
 from platformdirs import user_documents_dir
 
 DATABASE_FOLDER = os.path.join(user_documents_dir(), "pg_budget")
@@ -48,6 +49,14 @@ class Database:
         """
         with open(self.db_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
+
+    def get_username(self):
+        """Return current username
+
+        Returns:
+            str: username
+        """
+        return Path(self.db_path).stem
 
 
 db = Database(os.path.join(DATABASE_FOLDER, "default.json"))
