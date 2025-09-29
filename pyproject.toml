@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pg-budget"
-version = "1.0.1"
+version = "1.0.2"
 description = ""
 authors = ["Gael <prungael@gmail.com>"]
 readme = "README.md"
