@@ -1,33 +1,17 @@
-[tool.poetry]
+[project]
 name = "pg-budget"
 version = "1.1.0"
 description = ""
-authors = ["Gael <prungael@gmail.com>"]
+authors = [{ name = "Gael", email = "prungael@gmail.com" }]
+requires-python = ">=3.12,<3.14"
 readme = "README.md"
-
-packages = [
-    { include = "pg_budget" }
+dependencies = [
+    "python-dateutil>=2.9.0.post0,<3",
+    "pyside6>=6.9.2,<7",
+    "platformdirs>=4.4.0",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.12,<3.14"
-python-dateutil = "^2.9.0.post0"
-pyside6 = "^6.9.2"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.4.2"
-pytest-qt = "^4.5.0"
-pytest-mock = "^3.15.0"
-pyinstaller = "^6.16.0"
-pytest-cov = "^7.0.0"
-ruff = "^0.13.2"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
+[project.scripts]
 pg-budget = "pg_budget.main:main"
 lint = "dev_tools.scripts:lint"
 format = "dev_tools.scripts:format"
@@ -36,10 +20,28 @@ test-e2e = "dev_tools.scripts:test_e2e"
 test-e2e-fast = "dev_tools.scripts:test_e2e_fast"
 test-unit = "dev_tools.scripts:test_unit"
 test-cov = "dev_tools.scripts:test_cov"
-
 format-dt = "dev_tools.scripts:format_dev_tools"
-
 build = "dev_tools.scripts:build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2,<9",
+    "pytest-qt>=4.5.0,<5",
+    "pytest-mock>=3.15.0,<4",
+    "pyinstaller>=6.16.0,<7",
+    "pytest-cov>=7.0.0,<8",
+    "ruff>=0.13.2,<0.14",
+]
+
+[tool.hatch.build.targets.sdist]
+include = ["pg_budget"]
+
+[tool.hatch.build.targets.wheel]
+include = ["pg_budget"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 markers = [

@@ -33,22 +33,19 @@ jobs:
           sudo apt-get install -y locales
           sudo locale-gen fr_FR.UTF-8
 
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Install dependencies
-        run: poetry install
+      - name: Install UV
+        run: pip install uv
 
       - name: Run format
-        run: poetry run format
+        run: uv run format
 
       - name: Run lint
-        run: poetry run lint
+        run: uv run lint
 
       - name: Run unit tests & coverage
-        run: poetry run test-cov
+        run: uv run test-cov
       
       - name: Run e2e tests 
-        run: poetry run test-e2e-fast
+        run: uv run test-e2e-fast
         env:
           QT_QPA_PLATFORM: offscreen

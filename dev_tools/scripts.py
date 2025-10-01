@@ -50,7 +50,7 @@ def run(cmd):
 
 
 def lint():
-    print("\n==> Running ruff (lint only)...")
+    print(f"{MAGENTA}\n==> Running ruff (lint only)...{RESET}")
     run(
         [
             sys.executable,
