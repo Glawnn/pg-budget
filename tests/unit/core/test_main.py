@@ -19,7 +19,6 @@ class FakeWindow:
 
 
 class TestEntryPoint:
-
     def test_main_normal_run(self, mocker):
         mocker.patch("pg_budget.main.QApplication", return_value=FakeApp())
         mocker.patch("pg_budget.main.MainWindow", return_value=FakeWindow())

@@ -29,13 +29,19 @@ class TestCRUDService:
         mock_write.assert_called_once()
 
     def test_get_all(self, mocker):
-        mocker.patch("pg_budget.core.db.db.load_data", return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]})
+        mocker.patch(
+            "pg_budget.core.db.db.load_data",
+            return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]},
+        )
         items = self.service.get_all()
         assert len(items) == 1
         assert items[0]["name"] == "Alpha"
 
     def test_get_by_id_found(self, mocker):
-        mocker.patch("pg_budget.core.db.db.load_data", return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]})
+        mocker.patch(
+            "pg_budget.core.db.db.load_data",
+            return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]},
+        )
         obj = self.service.get_by_id(1)
         assert isinstance(obj, FakeModel)
         assert obj.name == "Alpha"
@@ -46,14 +52,20 @@ class TestCRUDService:
         assert obj is None
 
     def test_delete(self, mocker):
-        mocker.patch("pg_budget.core.db.db.load_data", return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]})
+        mocker.patch(
+            "pg_budget.core.db.db.load_data",
+            return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]},
+        )
         mock_write = mocker.patch("pg_budget.core.db.db.write_data")
 
         self.service.delete(1)
         mock_write.assert_called_once()
 
     def test_update_success(self, mocker):
-        mocker.patch("pg_budget.core.db.db.load_data", return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]})
+        mocker.patch(
+            "pg_budget.core.db.db.load_data",
+            return_value={"fakes": [{"fake_id": 1, "name": "Alpha"}]},
+        )
         mock_write = mocker.patch("pg_budget.core.db.db.write_data")
 
         obj = self.service.update(1, name="Beta")

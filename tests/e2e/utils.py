@@ -31,7 +31,7 @@ def present_in_table(table, expected):
                 row_repr[col] = widget.text()
         all_rows.append(f"Row {i}: {row_repr}")
 
-    pytest.fail(f"No row matches {expected}\n" f"Table content:\n" + "\n".join(all_rows))
+    pytest.fail(f"No row matches {expected}\nTable content:\n" + "\n".join(all_rows))
 
 
 def absent_in_table(table, expected):

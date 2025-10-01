@@ -8,7 +8,6 @@ class ExpensesPlanRow(BaseRow):
     """Class row for expense"""
 
     def __init__(self, expenses_plan: ExpensesPlan, parent=None):
-
         fields = [
             RowField("Name", value=expenses_plan.name),
             RowField("Amount", value=f"{expenses_plan.amount:.2f} €"),

@@ -93,7 +93,10 @@ class TestDatabaseFile:
         expense_table = self.main_window.expenses_view.expense_table
         assert len(expense_table.rows) == 1
 
-        assert present_in_table(expense_table, {"Name": "Test Expense", "Amount": "123.45 €", "Date": "2025-09-01"})
+        assert present_in_table(
+            expense_table,
+            {"Name": "Test Expense", "Amount": "123.45 €", "Date": "2025-09-01"},
+        )
 
         plan_table = self.main_window.expenses_plan_view.expenses_plan_table
         assert len(plan_table.rows) == 1

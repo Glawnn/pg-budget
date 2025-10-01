@@ -4,7 +4,13 @@ from PySide6.QtCore import QLocale
 
 
 def pytest_addoption(parser):
-    parser.addoption("--delay", action="store", default=0, type=int, help="Delay (in milliseconds) for E2E tests")
+    parser.addoption(
+        "--delay",
+        action="store",
+        default=0,
+        type=int,
+        help="Delay (in milliseconds) for E2E tests",
+    )
 
 
 @pytest.fixture

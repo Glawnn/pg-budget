@@ -32,8 +32,20 @@ class TestExpenseService:
 
     def test_get_by_category(self, mocker):
         expenses = [
-            {"expense_id": 1, "category_id": 10, "plan_id": 100, "date": "2023-05-10", "amount": 50},
-            {"expense_id": 2, "category_id": 20, "plan_id": 100, "date": "2023-05-11", "amount": 30},
+            {
+                "expense_id": 1,
+                "category_id": 10,
+                "plan_id": 100,
+                "date": "2023-05-10",
+                "amount": 50,
+            },
+            {
+                "expense_id": 2,
+                "category_id": 20,
+                "plan_id": 100,
+                "date": "2023-05-11",
+                "amount": 30,
+            },
         ]
         mocker.patch.object(self.service, "get_all", return_value=expenses)
 
@@ -43,8 +55,20 @@ class TestExpenseService:
 
     def test_get_by_plan(self, mocker):
         expenses = [
-            {"expense_id": 1, "category_id": 10, "plan_id": 200, "date": "2023-05-10", "amount": 50},
-            {"expense_id": 2, "category_id": 20, "plan_id": 300, "date": "2023-05-11", "amount": 30},
+            {
+                "expense_id": 1,
+                "category_id": 10,
+                "plan_id": 200,
+                "date": "2023-05-10",
+                "amount": 50,
+            },
+            {
+                "expense_id": 2,
+                "category_id": 20,
+                "plan_id": 300,
+                "date": "2023-05-11",
+                "amount": 30,
+            },
         ]
         mocker.patch.object(self.service, "get_all", return_value=expenses)
 
@@ -54,8 +78,20 @@ class TestExpenseService:
 
     def test_get_by_month(self, mocker):
         expenses = [
-            {"expense_id": 1, "category_id": 10, "plan_id": 200, "date": "2023-05-10", "amount": 50},
-            {"expense_id": 2, "category_id": 20, "plan_id": 300, "date": "2023-06-11", "amount": 30},
+            {
+                "expense_id": 1,
+                "category_id": 10,
+                "plan_id": 200,
+                "date": "2023-05-10",
+                "amount": 50,
+            },
+            {
+                "expense_id": 2,
+                "category_id": 20,
+                "plan_id": 300,
+                "date": "2023-06-11",
+                "amount": 30,
+            },
         ]
         mocker.patch.object(self.service, "get_all", return_value=expenses)
 

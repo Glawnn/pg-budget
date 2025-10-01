@@ -59,7 +59,11 @@ class ExpenseDialog(BaseDialog):
 
     def _init_form(self, form_layout):
         expense: Expense = expenseService.get_by_id(self.entity_id) if self.entity_id else None
-        logger.info("Loaded Expense ID %s: %s", self.entity_id, expense.__dict__ if expense else "None")
+        logger.info(
+            "Loaded Expense ID %s: %s",
+            self.entity_id,
+            expense.__dict__ if expense else "None",
+        )
 
         self.name_input = QLineEdit(expense.name if expense else "")
         form_layout.addRow(QLabel("Name:"), self.name_input)

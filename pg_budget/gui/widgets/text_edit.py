@@ -15,7 +15,11 @@ class TextEdit(QWidget):
         self.lines_number = lines_number
         self.max_chars = max_chars
 
-        logger.debug("Initializing TextEdit widget: lines=%d, max_chars=%s", lines_number, max_chars)
+        logger.debug(
+            "Initializing TextEdit widget: lines=%d, max_chars=%s",
+            lines_number,
+            max_chars,
+        )
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)

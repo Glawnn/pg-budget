@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Run format
+        run: poetry run format
+
       - name: Run lint
         run: poetry run lint
 

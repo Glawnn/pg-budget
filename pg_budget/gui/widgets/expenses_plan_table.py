@@ -51,14 +51,18 @@ class ExpensesPlanDialog(BaseDialog):
     def _init_form(self, form_layout):
         expenses_plan: ExpensesPlan = expensesPlanService.get_by_id(self.entity_id)
         logger.info(
-            "Loaded ExpensesPlan ID %s: %s", self.entity_id, expenses_plan.__dict__ if expenses_plan else "None"
+            "Loaded ExpensesPlan ID %s: %s",
+            self.entity_id,
+            expenses_plan.__dict__ if expenses_plan else "None",
         )
 
         self.name_input = QLineEdit(expenses_plan.name if expenses_plan else "")
         form_layout.addRow(QLabel("Name:"), self.name_input)
 
         self.description_input = TextEdit(
-            expenses_plan.description if expenses_plan else "", lines_number=3, max_chars=120
+            expenses_plan.description if expenses_plan else "",
+            lines_number=3,
+            max_chars=120,
         )
         form_layout.addRow(QLabel("Description"), self.description_input)
 
