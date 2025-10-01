@@ -19,8 +19,7 @@ PACKAGES = ["pg_budget"]
 TESTS = "tests"
 DEV_TOOLS = "dev_tools"
 
-BLACK_MAX_LINE_LENGTH = 120
-FLAKE8_MAX_LINE_LENGTH = 120
+RUFF_MAX_LINE_LENGTH = 120
 
 COVERAGE_FAIL_UNDER = 95
 
@@ -32,7 +31,8 @@ MAGENTA = "\033[35m"
 CYAN = "\033[36m"
 RESET = "\033[0m"
 
-sys.stdout.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding="utf-8")
+
 
 def run(cmd):
     """Run a command, stop on error"""
@@ -50,24 +50,37 @@ def run(cmd):
 
 
 def lint():
-    print("\n==> Running black (check only)...")
-    run([sys.executable, "-m", "black", "--line-length", str(BLACK_MAX_LINE_LENGTH), "--check", *PACKAGES, TESTS])
-
-    print("\n==> Running flake8...")
-    run([sys.executable, "-m", "flake8", f"--max-line-length={FLAKE8_MAX_LINE_LENGTH}", *PACKAGES, TESTS])
-
-    print("\n==> Running pylint...")
-    run([sys.executable, "-m", "pylint", *PACKAGES])
+    print(f"{MAGENTA}\n==> Running ruff (lint only)...{RESET}")
+    run(
+        [
+            sys.executable,
+            "-m",
+            "ruff",
+            "check",
+            "--line-length",
+            str(RUFF_MAX_LINE_LENGTH),
+            *PACKAGES,
+            TESTS,
+        ]
+    )
 
 
 def format():
-    print(f"{MAGENTA}\n==> Formatting with black...{RESET}")
-    run([sys.executable, "-m", "black", "--line-length", str(BLACK_MAX_LINE_LENGTH), *PACKAGES, TESTS])
+    print(f"{MAGENTA}\n==> Formatting with ruff...{RESET}")
 
-
-def format_dev_tools():
-    print(f"{MAGENTA}\n==> Formatting with black...{RESET}")
-    run([sys.executable, "-m", "black", "--line-length", str(BLACK_MAX_LINE_LENGTH), DEV_TOOLS, TESTS])
+    run(
+        [
+            sys.executable,
+            "-m",
+            "ruff",
+            "format",
+            "--line-length",
+            str(RUFF_MAX_LINE_LENGTH),
+            *PACKAGES,
+            TESTS,
+            DEV_TOOLS,
+        ]
+    )
 
 
 def test_unit():
@@ -78,6 +91,7 @@ def test_unit():
 def test_e2e():
     print("\n==> Running e2e tests...")
     run([sys.executable, "-m", "pytest", "-k", "e2e", TESTS, "-v", "--delay", "1000"])
+
 
 def test_e2e_fast():
     print("\n==> Running e2e tests...")
@@ -132,7 +146,6 @@ def build():
     print(f"Entry point: {ENTRY_POINT}")
     print(f"Dist directory: {DIST_DIR}")
     print(f"Extra data: {add_data}")
-
 
     cmd = [
         sys.executable,

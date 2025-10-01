@@ -14,7 +14,6 @@ class ExpenseRow(BaseRow):
     paid_changed = Signal(bool)
 
     def __init__(self, expense: Expense, parent=None):
-
         fields = [
             RowField("Name", value=expense.name),
             RowField("Amount", value=f"{expense.amount:.2f} €"),

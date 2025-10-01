@@ -19,7 +19,12 @@ class BaseDialog(QDialog):
 
     updated = Signal(str)
 
-    def __init__(self, entity_id: str = None, parent=None, fixed_size: tuple[int, int] = (300, 300)):
+    def __init__(
+        self,
+        entity_id: str = None,
+        parent=None,
+        fixed_size: tuple[int, int] = (300, 300),
+    ):
         super().__init__(parent, Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.entity_id = entity_id
         self.setWindowModality(Qt.ApplicationModal)

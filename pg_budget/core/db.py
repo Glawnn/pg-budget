@@ -21,7 +21,11 @@ class Database:
             os.makedirs(folder, exist_ok=True)
         if not os.path.exists(self.db_path):
             with open(self.db_path, "w", encoding="utf-8") as file:
-                json.dump({"expensesplans": [], "categories": [], "expenses": []}, file, indent=4)
+                json.dump(
+                    {"expensesplans": [], "categories": [], "expenses": []},
+                    file,
+                    indent=4,
+                )
 
     def set_path(self, db_path: str):
         """set new db file path

@@ -1,3 +1,4 @@
+from datetime import date
 import json
 
 import pytest
@@ -48,15 +49,20 @@ class TestDatabaseFile:
         assert "test_budget_new" in self.main_window.windowTitle()
 
     def test_load_existing_db(self, make_db, mocker, qbot_delay):
+        today = date.today()
+
         db_data = {
-            "expenses": [
-                {
-                    "expense_id": "e1",
-                    "name": "Test Expense",
-                    "amount": 123.45,
-                    "date": "2025-09-01",
-                    "payed": False,
-                }
+                "expenses": [
+                    {
+                "amount": 123.45,
+                "name": "Test Expense",
+                "description": "Elec",
+                "category_id": None,
+                "plan_id": "df081f0b-4a3f-48d7-8ad2-abd290e73df9",
+                "expense_id": "4d25d730-89e0-4ac2-803a-e9d3e076786e",
+                "date": str(today.strftime("%Y-%m-%d")),
+                "payed": True
+            },
             ],
             "expensesplans": [
                 {
@@ -93,7 +99,10 @@ class TestDatabaseFile:
         expense_table = self.main_window.expenses_view.expense_table
         assert len(expense_table.rows) == 1
 
-        assert present_in_table(expense_table, {"Name": "Test Expense", "Amount": "123.45 €", "Date": "2025-09-01"})
+        assert present_in_table(
+            expense_table,
+            {"Name": "Test Expense", "Amount": "123.45 €", "Date": today.strftime("%Y-%m-%d")},
+        )
 
         plan_table = self.main_window.expenses_plan_view.expenses_plan_table
         assert len(plan_table.rows) == 1

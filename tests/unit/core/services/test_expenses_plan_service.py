@@ -41,7 +41,10 @@ class FakeExpensesPlan:
 class TestExpensesPlanService:
     @pytest.fixture(autouse=True)
     def setup(self, mocker):
-        mocker.patch("pg_budget.core.services.expenses_plan_service.ExpensesPlan", FakeExpensesPlan)
+        mocker.patch(
+            "pg_budget.core.services.expenses_plan_service.ExpensesPlan",
+            FakeExpensesPlan,
+        )
         mocker.patch("pg_budget.core.services.expenses_plan_service.Expense", FakeExpense)
         self.service = ExpensesPlanService()
         self.service.model_key = "expensesplans"
@@ -51,7 +54,10 @@ class TestExpensesPlanService:
 
     def test_generate_expenses_monthly(self):
         plan = FakeExpensesPlan(
-            start_date="2023-01-01", end_date="2023-03-31", due_date="2023-01-15", frequency="monthly"
+            start_date="2023-01-01",
+            end_date="2023-03-31",
+            due_date="2023-01-15",
+            frequency="monthly",
         )
         expenses = self.service._generate_expenses(plan)
         assert len(expenses) == 3  # Jan, Feb, Mar
@@ -59,14 +65,20 @@ class TestExpensesPlanService:
 
     def test_generate_expenses_quarterly(self):
         plan = FakeExpensesPlan(
-            start_date="2023-01-01", end_date="2023-12-31", due_date="2023-01-15", frequency="quarterly"
+            start_date="2023-01-01",
+            end_date="2023-12-31",
+            due_date="2023-01-15",
+            frequency="quarterly",
         )
         expenses = self.service._generate_expenses(plan)
         assert len(expenses) == 4  # Jan, Apr, Jul, Oct
 
     def test_generate_expenses_yearly(self):
         plan = FakeExpensesPlan(
-            start_date="2023-01-01", end_date="2025-12-31", due_date="2023-01-15", frequency="yearly"
+            start_date="2023-01-01",
+            end_date="2025-12-31",
+            due_date="2023-01-15",
+            frequency="yearly",
         )
         expenses = self.service._generate_expenses(plan)
         assert len(expenses) == 3  # 2023, 2024, 2025
@@ -78,7 +90,8 @@ class TestExpensesPlanService:
 
     def test_create_calls_expense_service(self, mocker):
         mocker.patch(
-            "pg_budget.core.services.expenses_plan_service.CRUDService.create", return_value=FakeExpensesPlan()
+            "pg_budget.core.services.expenses_plan_service.CRUDService.create",
+            return_value=FakeExpensesPlan(),
         )
 
         plan = self.service.create(name="TestPlan")

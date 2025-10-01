@@ -63,7 +63,12 @@ class CRUDService:
                 items[index] = item
                 data[self.model_key] = items
                 db.write_data(data)
-                logger.info("Updated %s id %s with %s", self.model_class.__name__, obj_id, kwargs)
+                logger.info(
+                    "Updated %s id %s with %s",
+                    self.model_class.__name__,
+                    obj_id,
+                    kwargs,
+                )
                 return self.model_class(**item)
 
         logger.warning("Update failed: %s with id %s not found", self.model_class.__name__, obj_id)

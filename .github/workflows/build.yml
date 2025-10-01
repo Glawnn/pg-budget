@@ -21,23 +21,20 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Poetry
-        run: pip install poetry
+      - name: Install UV
+        run: pip install uv
 
-      - name: Install dependencies
-        run: poetry install --with dev
-
-      - name: Get version from Poetry
+      - name: Get version from UV
         id: get_version
         shell: bash
         run: |
-          VERSION=$(poetry version -s)
+          VERSION=$(uv version --short)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build with PyInstaller
         run: |
-          poetry run build
+          uv run build
 
       - name: Install zip on Windows
         if: runner.os == 'Windows'
