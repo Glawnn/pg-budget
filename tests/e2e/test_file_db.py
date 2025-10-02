@@ -52,17 +52,17 @@ class TestDatabaseFile:
         today = date.today()
 
         db_data = {
-                "expenses": [
-                    {
-                "amount": 123.45,
-                "name": "Test Expense",
-                "description": "Elec",
-                "category_id": None,
-                "plan_id": "df081f0b-4a3f-48d7-8ad2-abd290e73df9",
-                "expense_id": "4d25d730-89e0-4ac2-803a-e9d3e076786e",
-                "date": str(today.strftime("%Y-%m-%d")),
-                "payed": True
-            },
+            "expenses": [
+                {
+                    "amount": 123.45,
+                    "name": "Test Expense",
+                    "description": "Elec",
+                    "category_id": None,
+                    "plan_id": "df081f0b-4a3f-48d7-8ad2-abd290e73df9",
+                    "expense_id": "4d25d730-89e0-4ac2-803a-e9d3e076786e",
+                    "date": str(today.strftime("%Y-%m-%d")),
+                    "payed": True,
+                },
             ],
             "expensesplans": [
                 {
@@ -101,7 +101,11 @@ class TestDatabaseFile:
 
         assert present_in_table(
             expense_table,
-            {"Name": "Test Expense", "Amount": "123.45 €", "Date": today.strftime("%Y-%m-%d")},
+            {
+                "Name": "Test Expense",
+                "Amount": "123.45 €",
+                "Date": today.strftime("%Y-%m-%d"),
+            },
         )
 
         plan_table = self.main_window.expenses_plan_view.expenses_plan_table

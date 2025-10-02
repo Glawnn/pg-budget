@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         self._init()
 
     def _init(self):
-        qss_path = "pg_budget/gui/styles/light_style.qss"
+        qss_path = "pg_budget/gui/styles/base.qss"
         with open(resource_path(qss_path), "r", encoding="utf-8") as file:
             qss = file.read()
             self.setStyleSheet(qss)

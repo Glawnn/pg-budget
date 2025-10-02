@@ -27,3 +27,7 @@ class ExpenseRow(BaseRow):
         paid_checkbox: QCheckBox = self.get_widget_by_name("Paid")
         if paid_checkbox:
             paid_checkbox.stateChanged.connect(safe_callback(lambda state: self.paid_changed.emit(state == 2)))
+
+    @staticmethod
+    def get_fields_names():
+        return ["Name", "Amount", "Date", "Paid"]

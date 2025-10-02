@@ -5,6 +5,8 @@ from PySide6.QtCore import Qt, Signal
 
 from pg_budget.gui.widgets.base import BaseRow
 from pg_budget.gui import logger
+from pg_budget.gui.widgets.base.base_row import RowField
+from pg_budget.gui.widgets.header_row import HeaderRow
 
 
 class BaseTable(QFrame):
@@ -54,6 +56,10 @@ class BaseTable(QFrame):
         if clear:
             self.clear()
 
+        header_fields = [RowField(name, value=name) for name in self.row_class.get_fields_names()]
+        self.header_row = HeaderRow(header_fields)
+        self.container_layout.addWidget(self.header_row)
+
         for item in items:
             row = self.row_class(item)
             self._init_row_connections(row)
@@ -74,11 +80,15 @@ class BaseTable(QFrame):
             column_keys = [name for name, widget in self.rows[0].widgets]
             max_widths = {key: 0 for key in column_keys}
 
-            for row in self.rows:
+            all_rows: list[BaseRow] = []
+            all_rows.append(self.header_row)
+            all_rows.extend(self.rows)
+
+            for row in all_rows:
                 for w_name, widget in row.widgets:
                     widget_width = widget.sizeHint().width()
                     if widget_width > max_widths[w_name]:
                         max_widths[w_name] = widget_width
 
-            for row in self.rows:
+            for row in all_rows:
                 row.resize_columns(max_widths)
