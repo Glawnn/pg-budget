@@ -39,6 +39,10 @@ class BaseRow(QFrame):
 
         self._ignore_widgets = None
 
+    @staticmethod
+    def get_fields_names():
+        raise NotImplementedError
+
     def get_widget_by_name(self, name: str) -> QWidget:
         """return widget used for column name
 

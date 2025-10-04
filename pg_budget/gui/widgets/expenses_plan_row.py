@@ -19,3 +19,7 @@ class ExpensesPlanRow(BaseRow):
 
     def _init_connections(self):
         pass
+
+    @staticmethod
+    def get_fields_names():
+        return ["Name", "Amount", "Start Date", "End Date"]
