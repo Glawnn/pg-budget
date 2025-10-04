@@ -23,7 +23,7 @@ class ExpensesPlanTable(BaseTable):
     """class for table expenses plans table"""
 
     def __init__(self):
-        super().__init__(ExpensesPlanRow)
+        super().__init__(ExpensesPlanRow, default_filterable="Name")
         logger.debug("ExpensesPlanTable initialized")
 
     def _init_row_connections(self, row):

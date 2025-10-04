@@ -25,7 +25,7 @@ class ExpensesTable(BaseTable):
     """Expense table class"""
 
     def __init__(self):
-        super().__init__(ExpenseRow)
+        super().__init__(ExpenseRow, default_filterable="Date")
         logger.debug("ExpensesTable initialized")
 
     def _init_row_connections(self, row: ExpenseRow):
