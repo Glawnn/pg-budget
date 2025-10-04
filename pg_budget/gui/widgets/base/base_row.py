@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import Any, Type
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QCheckBox, QLabel, QComboBox, QWidget
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QCheckBox, QLabel, QComboBox, QWidget, QPushButton
 from PySide6.QtCore import Signal
 from pg_budget.gui import logger
 
@@ -22,11 +22,12 @@ class BaseRow(QFrame):
 
     row_clicked = Signal()
 
-    def __init__(self, fields: list[RowField], row_id: str, parent=None):
+    def __init__(self, fields: list[RowField], row_id: str, parent=None, clickable: bool = True):
         super().__init__(parent)
         self.row_id = row_id
         self.fields = fields
         self.widgets = []
+        self.clickable = clickable
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -70,6 +71,9 @@ class BaseRow(QFrame):
                 widget.addItems(_field.options)
                 if _field.value in _field.options:
                     widget.setCurrentText(_field.value)
+            elif _field.type == QPushButton:
+                widget = QPushButton(str(_field.value))
+                widget.setFlat(True)
             else:
                 widget = QLabel(str(_field.value))
 
@@ -86,13 +90,14 @@ class BaseRow(QFrame):
     def mousePressEvent(self, event):
         """Detect when row is clicked"""
         clicked_widget = self.childAt(event.position().toPoint())
+        if self.clickable:
+            interactive_widgets = [w for w in self.widgets if isinstance(w, (QCheckBox, QComboBox))]
+            if clicked_widget in interactive_widgets:
+                return super().mousePressEvent(event)
 
-        interactive_widgets = [w for w in self.widgets if isinstance(w, (QCheckBox, QComboBox))]
-        if clicked_widget in interactive_widgets:
-            return super().mousePressEvent(event)
+            logger.debug("Row clicked: %s", self.row_id)
+            self.row_clicked.emit()
 
-        logger.debug("Row clicked: %s", self.row_id)
-        self.row_clicked.emit()
         return super().mousePressEvent(event)
 
     def resize_columns(self, width: dict):

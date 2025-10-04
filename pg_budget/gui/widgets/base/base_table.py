@@ -1,6 +1,6 @@
 """base of table"""
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QFrame
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QFrame, QPushButton, QCheckBox, QLabel, QComboBox
 from PySide6.QtCore import Qt, Signal
 
 from pg_budget.gui.widgets.base import BaseRow
@@ -14,10 +14,11 @@ class BaseTable(QFrame):
 
     updated_table = Signal()
 
-    def __init__(self, row_class: type):
+    def __init__(self, row_class: type, default_filterable: str = None):
         super().__init__()
         self.row_class = row_class
         self.rows: list[BaseRow] = []
+        self.default_filterable = default_filterable
 
         self._layout = QVBoxLayout(self)
         self._layout.setContentsMargins(0, 0, 0, 0)
@@ -56,15 +57,19 @@ class BaseTable(QFrame):
         if clear:
             self.clear()
 
-        header_fields = [RowField(name, value=name) for name in self.row_class.get_fields_names()]
+        header_fields = [RowField(name, type=QPushButton, value=name) for name in self.row_class.get_fields_names()]
         self.header_row = HeaderRow(header_fields)
         self.container_layout.addWidget(self.header_row)
+        self.header_row.sort_requested.connect(self._sort_table)
 
         for item in items:
             row = self.row_class(item)
             self._init_row_connections(row)
             self.container_layout.addWidget(row)
             self.rows.append(row)
+
+        if self.default_filterable:
+            self._sort_table(self.default_filterable, True)
 
         self.container_layout.setAlignment(Qt.AlignTop)
         logger.debug("Loaded BaseTable with %d rows", len(self.rows))
@@ -92,3 +97,43 @@ class BaseTable(QFrame):
 
             for row in all_rows:
                 row.resize_columns(max_widths)
+
+    def _sort_table(self, column_name: str, ascending: bool):
+        """Sort table by column name
+
+        Args:
+            column_name (str): name of column
+            ascending (bool): ascending or descending
+        """
+        logger.debug("Sorting BaseTable by column '%s', ascending=%s", column_name, ascending)
+        try:
+            index = next(i for i, (name, widget) in enumerate(self.header_row.widgets) if name == column_name)
+        except StopIteration:
+            logger.error("Column name '%s' not found in header row", column_name)
+            return
+
+        def sort_key(row: BaseRow):
+            widget = row.widgets[index][1]
+            if isinstance(widget, QPushButton) or isinstance(widget, QLabel):
+                text = widget.text()
+                try:
+                    return float(text.replace(" €", "").replace(",", "."))
+                except ValueError:
+                    return text.lower()
+            elif isinstance(widget, QCheckBox):
+                return widget.isChecked()
+            elif isinstance(widget, QComboBox):
+                return widget.currentText().lower()
+            return str(widget)
+
+        self.rows.sort(key=sort_key, reverse=not ascending)
+
+        for i in reversed(range(self.container_layout.count())):
+            widget = self.container_layout.itemAt(i).widget()
+            if widget and widget != self.header_row:
+                widget.setParent(None)
+
+        for row in self.rows:
+            self.container_layout.addWidget(row)
+
+        self.resizing()
