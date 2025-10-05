@@ -1,6 +1,6 @@
 [project]
 name = "pg-budget"
-version = "1.1.0"
+version = "1.1.1"
 description = ""
 authors = [{ name = "Gael", email = "prungael@gmail.com" }]
 requires-python = ">=3.12,<3.14"
