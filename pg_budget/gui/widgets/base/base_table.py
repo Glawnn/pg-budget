@@ -67,12 +67,12 @@ class BaseTable(QFrame):
             self.clear()
 
         header_fields = [RowField(name, type=QPushButton, value=name) for name in self.row_class.get_fields_names()]
-        self.header_row = HeaderRow(header_fields)
+        self.header_row = HeaderRow(header_fields, parent=self.container)
         self.container_layout.addWidget(self.header_row)
         self.header_row.sort_requested.connect(self._sort_table)
 
         for item in items:
-            row = self.row_class(item)
+            row = self.row_class(item, parent=self.container)
             self._init_row_connections(row)
             self.container_layout.addWidget(row)
             self.rows.append(row)

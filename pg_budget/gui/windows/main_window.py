@@ -172,7 +172,6 @@ class AppMenu(QObject):
         dialog = ExpenseDialog(parent=self.main_window)
         dialog.exec()
         self.main_window.expenses_view.load()
-        self.main_window.expenses_view.load()
 
     def create_expenses_plan(self):
         """create expense plan"""
