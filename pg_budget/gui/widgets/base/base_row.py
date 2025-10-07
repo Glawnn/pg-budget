@@ -2,7 +2,15 @@
 
 from dataclasses import dataclass, field
 from typing import Any, Type
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QCheckBox, QLabel, QComboBox, QWidget, QPushButton
+from PySide6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QCheckBox,
+    QLabel,
+    QComboBox,
+    QWidget,
+    QPushButton,
+)
 from PySide6.QtCore import Signal
 from pg_budget.gui import logger
 

@@ -104,7 +104,7 @@ class TestDatabaseFile:
             {
                 "Name": "Test Expense",
                 "Amount": "123.45 €",
-                "Date": today.strftime("%Y-%m-%d"),
+                "Date": today.strftime("%d/%m/%Y"),
             },
         )
 

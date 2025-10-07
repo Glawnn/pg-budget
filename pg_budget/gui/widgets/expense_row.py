@@ -1,5 +1,6 @@
 """Custom Row for Expense"""
 
+from datetime import datetime
 from PySide6.QtWidgets import QCheckBox
 from PySide6.QtCore import Signal
 
@@ -14,10 +15,13 @@ class ExpenseRow(BaseRow):
     paid_changed = Signal(bool)
 
     def __init__(self, expense: Expense, parent=None):
+        date_str = datetime.now().strftime(expense.date)
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
         fields = [
             RowField("Name", value=expense.name),
             RowField("Amount", value=f"{expense.amount:.2f} €"),
-            RowField("Date", value=expense.date),
+            RowField("Date", value=date_obj.strftime("%d/%m/%Y")),
             RowField("Paid", type=QCheckBox, value=expense.payed),
         ]
 

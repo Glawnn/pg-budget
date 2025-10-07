@@ -1,6 +1,15 @@
 """base of table"""
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QFrame, QPushButton, QCheckBox, QLabel, QComboBox
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QScrollArea,
+    QFrame,
+    QPushButton,
+    QCheckBox,
+    QLabel,
+    QComboBox,
+)
 from PySide6.QtCore import Qt, Signal
 
 from pg_budget.gui.widgets.base import BaseRow
