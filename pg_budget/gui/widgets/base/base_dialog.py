@@ -25,7 +25,7 @@ class BaseDialog(QDialog):
         parent=None,
         fixed_size: tuple[int, int] = (300, 300),
     ):
-        super().__init__(parent, Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        super().__init__(parent, Qt.Window | Qt.WindowStaysOnTopHint)
         self.entity_id = entity_id
         self.setWindowModality(Qt.ApplicationModal)
         self.setFixedSize(*fixed_size)
