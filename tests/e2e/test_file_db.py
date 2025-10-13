@@ -4,6 +4,7 @@ import json
 import pytest
 
 from pg_budget.gui.windows.main_window import MainWindow
+from pg_budget.utils import DateFormatter
 from tests.e2e.utils import present_in_table
 
 
@@ -104,7 +105,7 @@ class TestDatabaseFile:
             {
                 "Name": "Test Expense",
                 "Amount": "123.45 €",
-                "Date": today.strftime("%d/%m/%Y"),
+                "Date": DateFormatter.format(today),
             },
         )
 
