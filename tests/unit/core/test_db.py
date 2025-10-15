@@ -12,6 +12,7 @@ class TestDatabase:
         assert "expensesplans" in data
         assert "categories" in data
         assert "expenses" in data
+        assert len(data["categories"]) > 0  # Ensure categories are initialized
 
     def test_set_path_creates_new_file(self, tmp_path):
         db_path1 = tmp_path / "db1.json"

@@ -1,6 +1,7 @@
 """expense service"""
 
 from datetime import datetime
+from pg_budget.core.models.category import Category
 from pg_budget.core.models.expense import Expense
 from pg_budget.core.services.crud_services import CRUDService
 from pg_budget.core import logger
@@ -11,6 +12,7 @@ class ExpenseService(CRUDService):
 
     def __init__(self):
         super().__init__(Expense)
+        self.categoryService = CRUDService(Category, "categories")
 
     def get_by_category(self, category_id):
         """get expense by category"""
@@ -37,6 +39,12 @@ class ExpenseService(CRUDService):
                 filtered_expenses.append(Expense(**expense))
         logger.debug("Filtered %d expenses for %04d-%02d", len(filtered_expenses), year, month)
         return filtered_expenses
+
+    def get_categories(self):
+        """get all categories"""
+        categories = self.categoryService.get_all()
+        logger.debug("Retrieved %d categories", len(categories))
+        return [Category(**category) for category in categories if category["category_type"] == "expense"]
 
 
 expenseService = ExpenseService()

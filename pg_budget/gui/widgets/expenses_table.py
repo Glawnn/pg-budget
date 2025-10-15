@@ -1,16 +1,11 @@
 """Expense Table"""
 
-from PySide6.QtWidgets import (
-    QLineEdit,
-    QDoubleSpinBox,
-    QDateEdit,
-    QCheckBox,
-    QLabel,
-    QSizePolicy,
-)
+from typing import List
+from PySide6.QtWidgets import QLineEdit, QDoubleSpinBox, QDateEdit, QCheckBox, QLabel, QSizePolicy, QComboBox
 from PySide6.QtCore import QDate
 
 
+from pg_budget.core.models.category import Category
 from pg_budget.core.models.expense import Expense
 from pg_budget.core.services import expenseService
 from pg_budget.gui.utils import safe_callback
@@ -59,6 +54,7 @@ class ExpenseDialog(BaseDialog):
 
     def _init_form(self, form_layout):
         expense: Expense = expenseService.get_by_id(self.entity_id) if self.entity_id else None
+        categories: List[Category] = expenseService.get_categories()
         logger.info(
             "Loaded Expense ID %s: %s",
             self.entity_id,
@@ -90,6 +86,17 @@ class ExpenseDialog(BaseDialog):
         self.paid_checkbox.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
         form_layout.addRow(QLabel("Paid:"), self.paid_checkbox)
 
+        self.category_combo = QComboBox()
+        for cat in categories:
+            self.category_combo.addItem(cat.name, cat.category_id)
+
+        if expense and getattr(expense, "category_id", None):
+            idx = self.category_combo.findData(expense.category_id)
+            if idx != -1:
+                self.category_combo.setCurrentIndex(idx)
+
+        form_layout.addRow(QLabel("Category:"), self.category_combo)
+
     def _on_save_btn_clicked(self):
         new_data = {
             "name": self.name_input.text(),
@@ -97,6 +104,7 @@ class ExpenseDialog(BaseDialog):
             "amount": self.amount_input.value(),
             "date": self.date_input.date().toString("yyyy-MM-dd"),
             "payed": self.paid_checkbox.isChecked(),
+            "category_id": self.category_combo.currentData(),
         }
 
         if self.entity_id:
