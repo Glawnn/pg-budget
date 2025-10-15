@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 from platformdirs import user_documents_dir
 
+from pg_budget.core.models.category import init_category_db
+
 DATABASE_FOLDER = os.path.join(user_documents_dir(), "pg_budget")
 
 
@@ -22,7 +24,7 @@ class Database:
         if not os.path.exists(self.db_path):
             with open(self.db_path, "w", encoding="utf-8") as file:
                 json.dump(
-                    {"expensesplans": [], "categories": [], "expenses": []},
+                    {"expensesplans": [], "categories": init_category_db(), "expenses": []},
                     file,
                     indent=4,
                 )
