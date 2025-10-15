@@ -23,6 +23,7 @@ class RowField:
     type: Type = QLabel
     value: Any = None
     options: list = field(default_factory=list)
+    color: str | None = None
 
 
 class BaseRow(QFrame):
@@ -84,6 +85,14 @@ class BaseRow(QFrame):
                 widget.setFlat(True)
             else:
                 widget = QLabel(str(_field.value))
+
+            if _field.color:
+                widget.setStyleSheet(f"""
+                    background-color: {_field.color};
+                    border-radius: 6px;
+                    padding: 2px 6px;
+                    color: white;
+                """)
 
             self.widgets.append((_field.label, widget))
             self._layout.addWidget(widget)
