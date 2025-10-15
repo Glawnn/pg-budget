@@ -7,9 +7,9 @@ from pg_budget.core import logger
 class CRUDService:
     """Basic crud services for an model"""
 
-    def __init__(self, model_class):
+    def __init__(self, model_class, model_key: str = None):
         self.model_class = model_class
-        self.model_key = model_class.__name__.lower() + "s"
+        self.model_key = model_class.__name__.lower() + "s" if model_key is None else model_key
         self.model_key_id = f"{self.model_key[:-1]}_id"
         logger.debug("Initialized CRUDService for model '%s'", self.model_class.__name__)
 

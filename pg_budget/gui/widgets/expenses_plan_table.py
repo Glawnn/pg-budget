@@ -1,16 +1,12 @@
 """Custom table for ExpensePlan"""
 
-from PySide6.QtWidgets import (
-    QComboBox,
-    QLineEdit,
-    QDoubleSpinBox,
-    QDateEdit,
-    QLabel,
-)
+from typing import List
+from PySide6.QtWidgets import QComboBox, QLineEdit, QDoubleSpinBox, QDateEdit, QLabel
 from PySide6.QtCore import QDate
 
+from pg_budget.core.models.category import Category
 from pg_budget.core.models.expenses_plan import ExpensesPlan
-from pg_budget.core.services import expensesPlanService
+from pg_budget.core.services import expensesPlanService, expenseService
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
@@ -50,6 +46,7 @@ class ExpensesPlanDialog(BaseDialog):
 
     def _init_form(self, form_layout):
         expenses_plan: ExpensesPlan = expensesPlanService.get_by_id(self.entity_id)
+        categories: List[Category] = expenseService.get_categories()
         logger.info(
             "Loaded ExpensesPlan ID %s: %s",
             self.entity_id,
@@ -106,6 +103,17 @@ class ExpensesPlanDialog(BaseDialog):
                 self.frequency_input.setCurrentIndex(index)
         form_layout.addRow(QLabel("Frequency:"), self.frequency_input)
 
+        self.category_combo = QComboBox()
+        for cat in categories:
+            self.category_combo.addItem(cat.name, cat.category_id)
+
+        if expenses_plan and getattr(expenses_plan, "category_id", None):
+            idx = self.category_combo.findData(expenses_plan.category_id)
+            if idx != -1:
+                self.category_combo.setCurrentIndex(idx)
+
+        form_layout.addRow(QLabel("Category:"), self.category_combo)
+
     def _on_save_btn_clicked(self):
         new_data = {
             "name": self.name_input.text(),
@@ -115,6 +123,7 @@ class ExpensesPlanDialog(BaseDialog):
             "end_date": self.end_date_input.date().toString("yyyy-MM-dd"),
             "due_date": self.due_date_input.date().toString("yyyy-MM-dd"),
             "frequency": self.frequency_input.currentText(),
+            "category_id": self.category_combo.currentData(),
         }
 
         if self.entity_id:
