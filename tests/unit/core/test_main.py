@@ -20,8 +20,8 @@ class FakeWindow:
 
 class TestEntryPoint:
     def test_main_normal_run(self, mocker):
-        mocker.patch("pg_budget.main.QApplication", return_value=FakeApp())
-        mocker.patch("pg_budget.main.MainWindow", return_value=FakeWindow())
+        mocker.patch("PySide6.QtWidgets.QApplication", return_value=FakeApp())
+        mocker.patch("pg_budget.gui.windows.MainWindow", return_value=FakeWindow())
         mock_sys_exit = mocker.patch("pg_budget.main.sys.exit")
 
         entry.main()
@@ -30,8 +30,8 @@ class TestEntryPoint:
 
     def test_main_keyboard_interrupt(self, mocker):
         fake_app = FakeApp()
-        mocker.patch("pg_budget.main.QApplication", return_value=fake_app)
-        mocker.patch("pg_budget.main.MainWindow", side_effect=KeyboardInterrupt)
+        mocker.patch("PySide6.QtWidgets.QApplication", return_value=fake_app)
+        mocker.patch("pg_budget.gui.windows.MainWindow", side_effect=KeyboardInterrupt)
         mock_sys_exit = mocker.patch("pg_budget.main.sys.exit")
 
         entry.main()
@@ -40,8 +40,8 @@ class TestEntryPoint:
 
     def test_main_generic_exception(self, mocker):
         fake_app = FakeApp()
-        mocker.patch("pg_budget.main.QApplication", return_value=fake_app)
-        mocker.patch("pg_budget.main.MainWindow", side_effect=RuntimeError("boom"))
+        mocker.patch("PySide6.QtWidgets.QApplication", return_value=fake_app)
+        mocker.patch("pg_budget.gui.windows.MainWindow", side_effect=RuntimeError("boom"))
         mock_sys_exit = mocker.patch("pg_budget.main.sys.exit")
 
         entry.main()

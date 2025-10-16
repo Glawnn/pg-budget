@@ -1,7 +1,7 @@
 """Module defining expense categories using an enumeration."""
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 from pg_budget.core.models.base_model import BaseModel
 
 
@@ -18,8 +18,17 @@ class Category(BaseModel):
 
 
 def init_category_db():
+    categories: List[Category] = []
+    categories.extend(base_expense_categories())
+    categories.extend(base_income_categories())
+
+    json_categories = [category.to_dict() for category in categories]
+    return json_categories
+
+
+def base_expense_categories():
     """Initialize the category database table."""
-    expense_categories = [
+    return [
         Category(
             category_id="housing",
             category_type="expense",
@@ -102,5 +111,56 @@ def init_category_db():
         ),
     ]
 
-    json_categories = [category.to_dict() for category in expense_categories]
-    return json_categories
+
+def base_income_categories():
+    """Initialize the income category database table."""
+    return [
+        Category(
+            category_id="salary",
+            category_type="income",
+            name="Salary",
+            description="Income from your main or secondary job",
+            color="#10B981",
+            icon="wallet",
+        ),
+        Category(
+            category_id="investments",
+            category_type="income",
+            name="Investments",
+            description="Dividends, interest, stock profits, crypto gains, etc.",
+            color="#F59E0B",
+            icon="trending-up",
+        ),
+        Category(
+            category_id="rental",
+            category_type="income",
+            name="Rental Income",
+            description="Income from renting out properties or assets",
+            color="#8B5CF6",
+            icon="home",
+        ),
+        Category(
+            category_id="business",
+            category_type="income",
+            name="Business",
+            description="Earnings from your business, shop, or company",
+            color="#EF4444",
+            icon="building-2",
+        ),
+        Category(
+            category_id="gifts",
+            category_type="income",
+            name="Gifts",
+            description="Money received as gifts, inheritances, or donations",
+            color="#EC4899",
+            icon="gift",
+        ),
+        Category(
+            category_id="other_income",
+            category_type="income",
+            name="Other Income",
+            description="Miscellaneous or uncategorized income",
+            color="#6B7280",
+            icon="ellipsis-horizontal",
+        ),
+    ]

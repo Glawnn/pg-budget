@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 from platformdirs import user_documents_dir
+from pg_budget.logger_setup import logger
 
 from pg_budget.core.models.category import init_category_db
 
@@ -15,6 +16,7 @@ class Database:
 
     def __init__(self, db_path: str):
         self.db_path = db_path
+        logger.info("Database initialized with path: %s", self.db_path)
         self._ensure_file()
 
     def _ensure_file(self):
@@ -36,6 +38,7 @@ class Database:
             db_path (str): new file path
         """
         self.db_path = db_path
+        logger.info("Database path changed to: %s", self.db_path)
         self._ensure_file()
 
     def load_data(self):
