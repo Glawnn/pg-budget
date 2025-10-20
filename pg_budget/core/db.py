@@ -26,7 +26,7 @@ class Database:
         if not os.path.exists(self.db_path):
             with open(self.db_path, "w", encoding="utf-8") as file:
                 json.dump(
-                    {"expensesplans": [], "categories": init_category_db(), "expenses": []},
+                    {"expensesplans": [], "categories": init_category_db(), "expenses": [], "incomes": []},
                     file,
                     indent=4,
                 )

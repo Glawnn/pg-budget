@@ -15,9 +15,11 @@ from PySide6.QtCore import Signal, QObject
 from pg_budget.core.db import DATABASE_FOLDER, db
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
+from pg_budget.gui.views.income_view import IncomeView
 from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 from pg_budget.gui import logger
+from pg_budget.gui.widgets.incomes_table import IncomeDialog
 from pg_budget.utils import resource_path
 
 
@@ -76,6 +78,12 @@ class MainWindow(QMainWindow):
         self.stacked_widget.addWidget(self.expenses_plan_view)
         self.expenses_plan_view.load()
         logger.info("ExpensesPlanView loaded")
+
+        # --- Vue 3 : Incomes ---
+        self.incomes_view = IncomeView()
+        self.stacked_widget.addWidget(self.incomes_view)
+        self.incomes_view.load()
+        logger.info("IncomeView loaded")
 
     def _create_status_bar(self):
         self.status_bar = self.statusBar()
@@ -150,6 +158,7 @@ class AppMenu(QObject):
 
         self.main_window.expenses_view.load()
         self.main_window.expenses_plan_view.load()
+        self.main_window.incomes_view.load()
 
     def _init_edit_menu(self):
         actions_menu: QMenu = self.main_window.menuBar().addMenu("Actions")
@@ -162,9 +171,9 @@ class AppMenu(QObject):
         add_expense_plan.triggered.connect(safe_callback(self.create_expenses_plan))
         actions_menu.addAction(add_expense_plan)
 
-        add_input = QAction("Add Input", self.main_window)
-        add_input.triggered.connect(safe_callback(lambda: print("add input -> to be implemented")))
-        actions_menu.addAction(add_input)
+        add_income = QAction("Add Income", self.main_window)
+        add_income.triggered.connect(safe_callback(self.create_income))
+        actions_menu.addAction(add_income)
 
     def create_expense(self):
         """create an expense"""
@@ -180,6 +189,13 @@ class AppMenu(QObject):
         dialog.exec()
         self.main_window.expenses_plan_view.load()
 
+    def create_income(self):
+        """create income"""
+        self.main_window.stacked_widget.setCurrentWidget(self.main_window.incomes_view)
+        dialog = IncomeDialog(parent=self.main_window)
+        dialog.exec()
+        self.main_window.incomes_view.load()
+
     def _init_view_menu(self):
         view_menu: QMenu = self.main_window.menuBar().addMenu("Views")
 
@@ -189,8 +205,14 @@ class AppMenu(QObject):
         )
         view_menu.addAction(show_expenses)
 
-        show_other = QAction("ExpensesPlan View", self.main_window)
-        show_other.triggered.connect(
+        show_expenses_plan = QAction("ExpensesPlan View", self.main_window)
+        show_expenses_plan.triggered.connect(
             safe_callback(lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_plan_view))
         )
-        view_menu.addAction(show_other)
+        view_menu.addAction(show_expenses_plan)
+
+        show_incomes = QAction("Incomes View", self.main_window)
+        show_incomes.triggered.connect(
+            safe_callback(lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.incomes_view))
+        )
+        view_menu.addAction(show_incomes)
