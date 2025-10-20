@@ -16,5 +16,5 @@ class Income(BaseModel):
     name: str
     description: Optional[str] = None
     category_id: Optional[str] = None
-    entry_id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
+    income_id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
     date: Optional[str] = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d"))
