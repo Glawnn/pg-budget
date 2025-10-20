@@ -1,4 +1,5 @@
 """Entry point"""
+
 import sys
 
 from pg_budget.logger_setup import logger
