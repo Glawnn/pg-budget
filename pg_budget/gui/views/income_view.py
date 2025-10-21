@@ -3,6 +3,7 @@
 from pg_budget.core.services import incomeService
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views.base_view import BaseView
+from pg_budget.gui.widgets.incomes_stats import IncomesStats
 from pg_budget.gui.widgets.incomes_table import IncomesTable
 from pg_budget.gui.widgets.month_year_picker import MonthYearPicker
 from pg_budget.gui import logger
@@ -21,6 +22,10 @@ class IncomeView(BaseView):
         self.income_table.updated_table.connect(safe_callback(self.load))
         self.month_year_picker.month_changed.connect(safe_callback(self.load))
 
+        self.incomes_stats = IncomesStats()
+        self.incomes_stats.setObjectName("IncomesStats")
+        self._layout.addWidget(self.incomes_stats)
+
         logger.debug("IncomeView initialized with MonthYearPicker and IncomesTable")
 
     def load(self, *_args, **_kwargs):
@@ -30,4 +35,5 @@ class IncomeView(BaseView):
         incomes = incomeService.get_by_month(year, month)
 
         self.income_table.load(incomes)
+        self.incomes_stats.update_stats(incomes)
         logger.debug("IncomeView loaded %d expenses", len(incomes))

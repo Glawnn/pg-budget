@@ -35,7 +35,5 @@ class ExpensesView(BaseView):
         expenses = expenseService.get_by_month(year, month)
 
         self.expense_table.load(expenses)
-        logger.debug("ExpensesView loaded %d expenses", len(expenses))
         self.expenses_stats.update_stats(expenses)
-
         logger.debug("ExpensesView loaded %d expenses", len(expenses))

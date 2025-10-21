@@ -1,6 +1,5 @@
 """Custom Row for Income"""
 
-
 from pg_budget.core.models.income import Income
 from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
 from pg_budget.utils import DateFormatter
