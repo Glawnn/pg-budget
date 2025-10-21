@@ -1,5 +1,7 @@
 """Widget for expenses Stats"""
 
+from typing import List
+from pg_budget.core.models.expense import Expense
 from pg_budget.gui.widgets.base.base_stats import BaseStats
 from pg_budget.gui.widgets.stat_item import StatItem
 
@@ -14,7 +16,7 @@ class ExpensesStats(BaseStats):
         ]
         super().__init__(items, columns=2, parent=parent)
 
-    def update_stats(self, expenses: list):
+    def update_stats(self, expenses: List[Expense]):
         if not expenses:
             self.reset_values()
             return

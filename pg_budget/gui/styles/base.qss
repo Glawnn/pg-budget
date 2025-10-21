@@ -15,32 +15,32 @@ ExpensesPlanTable {
 }
 
 /* Stats */
-ExpensesStats {
+BaseStats {
     background-color: #2a2d32;
     border: 1px solid #444;
     border-radius: 6px;
     padding: 6px 12px;
 }
 
-ExpensesStats QLabel {
+BaseStats QLabel {
     color: #e0e0e0;
     font-size: 13px;
     font-weight: bold;
 }
 
-#StatItem_expense_total {
+#StatItem_expense_total, #StatItem_total_income {
     color: #7ec8e3;
 }
 
-#StatItem_expense_remaining_count {
+#StatItem_expense_remaining_count, #StatItem_income_remaining_count {
     color: #7ec8e3;
 }
 
-#StatItem_expense_remaining {
+#StatItem_expense_remaining, #StatItem_remaining_income {
     color: #e38e7e;
 }
 
-#StatItem_already_paid {
+#StatItem_already_paid, #StatItem_already_received {
     color: #7ee37e;
 }
 
