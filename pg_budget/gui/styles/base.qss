@@ -26,21 +26,21 @@ ExpensesStats QLabel {
     color: #e0e0e0;
     font-size: 13px;
     font-weight: bold;
-} 
+}
 
-#TotalLabel {
+#StatItem_expense_total {
     color: #7ec8e3;
 }
 
-#RemainingCountLabel {
+#StatItem_expense_remaining_count {
     color: #7ec8e3;
 }
 
-#RemainingLabel {
+#StatItem_expense_remaining {
     color: #e38e7e;
 }
 
-#AlreadyPaidLabel {
+#StatItem_already_paid {
     color: #7ee37e;
 }
 
