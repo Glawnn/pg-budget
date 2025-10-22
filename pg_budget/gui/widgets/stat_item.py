@@ -35,3 +35,7 @@ class StatItem(QWidget):
         """Update unit dynamically"""
         self.unit = unit
         self.label.setText(self._format_text())
+
+    def set_color(self, color: str):
+        """Change text color dynamically"""
+        self.label.setStyleSheet(f"color: {color};")

@@ -46,10 +46,11 @@ class BaseTable(QFrame):
     def clear(self):
         """Clear all elements of the table content"""
         logger.debug("Clearing BaseTable rows (%d rows)", len(self.rows))
-        for i in reversed(range(self.container_layout.count())):
-            widget = self.container_layout.itemAt(i).widget()
-            if widget:
-                widget.setParent(None)
+        while self.container_layout.count():
+            item = self.container_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
         self.rows = []
         self._clear()
 
