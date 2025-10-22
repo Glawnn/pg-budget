@@ -16,6 +16,7 @@ from pg_budget.core.db import DATABASE_FOLDER, db
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views import ExpensesView, ExpensesPlanView
 from pg_budget.gui.views.income_view import IncomeView
+from pg_budget.gui.views.resume_view import ResumeView
 from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
 from pg_budget.gui import logger
@@ -66,6 +67,12 @@ class MainWindow(QMainWindow):
         self.stacked_widget = QStackedWidget()
         layout.addWidget(self.stacked_widget)
         logger.debug("Central widget and stacked widget created")
+
+        # --- Vue 0 : Expenses ---
+        self.resume_view = ResumeView()
+        self.stacked_widget.addWidget(self.resume_view)
+        self.resume_view.load()
+        logger.info("ResumeView loaded")
 
         # --- Vue 1 : Expenses ---
         self.expenses_view = ExpensesView()
@@ -156,6 +163,7 @@ class AppMenu(QObject):
         # Affiche le chemin dans la status bar
         self.main_window.status_bar.showMessage(f"DB: {file_path}")
 
+        self.main_window.resume_view.load()
         self.main_window.expenses_view.load()
         self.main_window.expenses_plan_view.load()
         self.main_window.incomes_view.load()
@@ -180,6 +188,7 @@ class AppMenu(QObject):
         self.main_window.stacked_widget.setCurrentWidget(self.main_window.expenses_view)
         dialog = ExpenseDialog(parent=self.main_window)
         dialog.exec()
+        self.main_window.resume_view.load()
         self.main_window.expenses_view.load()
 
     def create_expenses_plan(self):
@@ -198,6 +207,12 @@ class AppMenu(QObject):
 
     def _init_view_menu(self):
         view_menu: QMenu = self.main_window.menuBar().addMenu("Views")
+
+        show_resume = QAction("Resume View", self.main_window)
+        show_resume.triggered.connect(
+            safe_callback(lambda: self.main_window.stacked_widget.setCurrentWidget(self.main_window.resume_view))
+        )
+        view_menu.addAction(show_resume)
 
         show_expenses = QAction("Expenses View", self.main_window)
         show_expenses.triggered.connect(
