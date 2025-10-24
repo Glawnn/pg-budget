@@ -1,10 +1,11 @@
 """expense service"""
 
 from datetime import datetime
+
+from pg_budget.core import logger
 from pg_budget.core.models.category import Category
 from pg_budget.core.models.expense import Expense
 from pg_budget.core.services.crud_services import CRUDService
-from pg_budget.core import logger
 
 
 class ExpenseService(CRUDService):
@@ -47,4 +48,4 @@ class ExpenseService(CRUDService):
         return [Category(**category) for category in categories if category["category_type"] == "expense"]
 
 
-expenseService = ExpenseService()
+expense_service = ExpenseService()

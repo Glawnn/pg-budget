@@ -48,3 +48,14 @@ markers = [
     "e2e: end-to-end tests",
     "unit: unit tests"
 ]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+extend-select = ["E", "N", "F", "I", "B", "UP", "C4", "SIM", "S"]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S"]
+"dev_tools/**/*.py" = ["S"]

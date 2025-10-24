@@ -1,5 +1,5 @@
-from datetime import date
 import json
+from datetime import date
 
 import pytest
 
@@ -40,7 +40,7 @@ class TestDatabaseFile:
 
         assert test_db_path.exists(), "Le fichier DB n'a pas été créé"
 
-        with open(test_db_path, "r") as f:
+        with open(test_db_path) as f:
             data = json.load(f)
             assert "expenses" in data
             assert "expensesplans" in data

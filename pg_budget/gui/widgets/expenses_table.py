@@ -1,19 +1,17 @@
 """Expense Table"""
 
-from typing import List
-from PySide6.QtWidgets import QLineEdit, QDoubleSpinBox, QDateEdit, QCheckBox, QLabel, QSizePolicy, QComboBox
 from PySide6.QtCore import QDate
-
+from PySide6.QtWidgets import QCheckBox, QComboBox, QDateEdit, QDoubleSpinBox, QLabel, QLineEdit, QSizePolicy
 
 from pg_budget.core.models.category import Category
 from pg_budget.core.models.expense import Expense
-from pg_budget.core.services import expenseService
+from pg_budget.core.services import expense_service
+from pg_budget.gui import logger
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
 from pg_budget.gui.widgets.expense_row import ExpenseRow
 from pg_budget.gui.widgets.text_edit import TextEdit
-from pg_budget.gui import logger
 
 
 class ExpensesTable(BaseTable):
@@ -29,7 +27,7 @@ class ExpensesTable(BaseTable):
 
     def _on_paid_changed(self, expense_id: str, paid: bool):
         logger.info("Updating expense ID %s: payed=%s", expense_id, paid)
-        expenseService.update(expense_id, payed=paid)
+        expense_service.update(expense_id, payed=paid)
         self.updated_table.emit()
         logger.debug("Updated signal emitted for expense ID %s", expense_id)
 
@@ -53,8 +51,8 @@ class ExpenseDialog(BaseDialog):
         logger.debug("ExpenseDialog %s, initialized with ID %s", self.windowTitle(), expense_id)
 
     def _init_form(self, form_layout):
-        expense: Expense = expenseService.get_by_id(self.entity_id) if self.entity_id else None
-        categories: List[Category] = expenseService.get_categories()
+        expense: Expense = expense_service.get_by_id(self.entity_id) if self.entity_id else None
+        categories: list[Category] = expense_service.get_categories()
         logger.info(
             "Loaded Expense ID %s: %s",
             self.entity_id,
@@ -108,10 +106,10 @@ class ExpenseDialog(BaseDialog):
         }
 
         if self.entity_id:
-            expenseService.update(self.entity_id, **new_data)
+            expense_service.update(self.entity_id, **new_data)
             logger.info("Updated Expense ID %s: %s", self.entity_id, new_data)
         else:
-            self.entity_id = expenseService.create(**new_data).expense_id
+            self.entity_id = expense_service.create(**new_data).expense_id
             logger.info("Created new Expense ID %s: %s", self.entity_id, new_data)
 
         self.updated.emit(self.entity_id)
@@ -120,5 +118,5 @@ class ExpenseDialog(BaseDialog):
         logger.debug("ExpenseDialog closed after save for ID %s", self.entity_id)
 
     def _delete_entity(self):
-        expenseService.delete(self.entity_id)
+        expense_service.delete(self.entity_id)
         logger.info("Deleted Expense ID %s", self.entity_id)

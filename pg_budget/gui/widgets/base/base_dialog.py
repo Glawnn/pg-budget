@@ -1,17 +1,17 @@
 """class for base dialog"""
 
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QDialog,
-    QVBoxLayout,
     QFormLayout,
-    QPushButton,
     QHBoxLayout,
     QMessageBox,
+    QPushButton,
+    QVBoxLayout,
 )
-from PySide6.QtCore import Qt, Signal
 
-from pg_budget.gui.utils import safe_callback
 from pg_budget.gui import logger
+from pg_budget.gui.utils import safe_callback
 
 
 class BaseDialog(QDialog):

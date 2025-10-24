@@ -1,7 +1,7 @@
 """Basic crud services for an model"""
 
-from pg_budget.core.db import db
 from pg_budget.core import logger
+from pg_budget.core.db import db
 
 
 class CRUDService:

@@ -1,17 +1,19 @@
 """Base row class for Table"""
 
 from dataclasses import dataclass, field
-from typing import Any, Type
+from typing import Any
+
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
     QFrame,
     QHBoxLayout,
-    QCheckBox,
     QLabel,
-    QComboBox,
-    QWidget,
     QPushButton,
+    QWidget,
 )
-from PySide6.QtCore import Signal
+
 from pg_budget.gui import logger
 
 
@@ -20,7 +22,7 @@ class RowField:
     """Row field"""
 
     label: str
-    type: Type = QLabel
+    type: type = QLabel
     value: Any = None
     options: list = field(default_factory=list)
     color: str | None = None
@@ -104,7 +106,7 @@ class BaseRow(QFrame):
     def _init_styles(self):
         """Add style row"""
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event):  # noqa: N802
         """Detect when row is clicked"""
         clicked_widget = self.childAt(event.position().toPoint())
         if self.clickable:

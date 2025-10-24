@@ -1,4 +1,5 @@
 import json
+
 from pg_budget.core.db import Database
 
 

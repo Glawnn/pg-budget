@@ -1,19 +1,17 @@
 """Income Table"""
 
-from typing import List
-from PySide6.QtWidgets import QLineEdit, QDoubleSpinBox, QDateEdit, QLabel, QComboBox
 from PySide6.QtCore import QDate
-
+from PySide6.QtWidgets import QComboBox, QDateEdit, QDoubleSpinBox, QLabel, QLineEdit
 
 from pg_budget.core.models.category import Category
 from pg_budget.core.models.income import Income
-from pg_budget.core.services import incomeService
+from pg_budget.core.services import income_service
+from pg_budget.gui import logger
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_dialog import BaseDialog
 from pg_budget.gui.widgets.base.base_table import BaseTable
 from pg_budget.gui.widgets.income_row import IncomeRow
 from pg_budget.gui.widgets.text_edit import TextEdit
-from pg_budget.gui import logger
 
 
 class IncomesTable(BaseTable):
@@ -46,8 +44,8 @@ class IncomeDialog(BaseDialog):
         logger.debug("IncomeDialog %s, initialized with ID %s", self.windowTitle(), income_id)
 
     def _init_form(self, form_layout):
-        income: Income = incomeService.get_by_id(self.entity_id) if self.entity_id else None
-        categories: List[Category] = incomeService.get_categories()
+        income: Income = income_service.get_by_id(self.entity_id) if self.entity_id else None
+        categories: list[Category] = income_service.get_categories()
         logger.info(
             "Loaded Income ID %s: %s",
             self.entity_id,
@@ -95,10 +93,10 @@ class IncomeDialog(BaseDialog):
         }
 
         if self.entity_id:
-            incomeService.update(self.entity_id, **new_data)
+            income_service.update(self.entity_id, **new_data)
             logger.info("Updated Income ID %s: %s", self.entity_id, new_data)
         else:
-            self.entity_id = incomeService.create(**new_data).income_id
+            self.entity_id = income_service.create(**new_data).income_id
             logger.info("Created new Income ID %s: %s", self.entity_id, new_data)
 
         self.updated.emit(self.entity_id)
@@ -107,5 +105,5 @@ class IncomeDialog(BaseDialog):
         logger.debug("IncomeDialog closed after save for ID %s", self.entity_id)
 
     def _delete_entity(self):
-        incomeService.delete(self.entity_id)
+        income_service.delete(self.entity_id)
         logger.info("Deleted Income ID %s", self.entity_id)

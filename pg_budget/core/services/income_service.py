@@ -1,8 +1,9 @@
 from datetime import datetime
+
+from pg_budget.core import logger
 from pg_budget.core.models.category import Category
 from pg_budget.core.models.income import Income
 from pg_budget.core.services.crud_services import CRUDService
-from pg_budget.core import logger
 
 
 class IncomeService(CRUDService):
@@ -37,4 +38,4 @@ class IncomeService(CRUDService):
         return [Category(**category) for category in categories if category["category_type"] == "income"]
 
 
-incomeService = IncomeService()
+income_service = IncomeService()

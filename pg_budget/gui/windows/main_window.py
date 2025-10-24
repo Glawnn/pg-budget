@@ -1,30 +1,27 @@
 """Main window"""
 
+from PySide6.QtCore import QObject, Signal
+from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
+    QFileDialog,
     QMainWindow,
+    QMenu,
+    QMessageBox,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
-    QStackedWidget,
-    QFileDialog,
-    QMessageBox,
-    QMenu,
 )
-from PySide6.QtGui import QAction
-from PySide6.QtCore import Signal, QObject
 
 from pg_budget.core.db import DATABASE_FOLDER, db
+from pg_budget.gui import logger
 from pg_budget.gui.utils import safe_callback
-from pg_budget.gui.views import ExpensesView, ExpensesPlanView
+from pg_budget.gui.views import ExpensesPlanView, ExpensesView
 from pg_budget.gui.views.income_view import IncomeView
 from pg_budget.gui.views.resume_view import ResumeView
 from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanDialog
 from pg_budget.gui.widgets.expenses_table import ExpenseDialog
-from pg_budget.gui import logger
 from pg_budget.gui.widgets.incomes_table import IncomeDialog
-from pg_budget.utils import resource_path
-
-
-from pg_budget.utils import __version__
+from pg_budget.utils import __version__, resource_path
 
 
 class MainWindow(QMainWindow):
@@ -46,7 +43,7 @@ class MainWindow(QMainWindow):
 
     def _init(self):
         qss_path = "pg_budget/gui/styles/base.qss"
-        with open(resource_path(qss_path), "r", encoding="utf-8") as file:
+        with open(resource_path(qss_path), encoding="utf-8") as file:
             qss = file.read()
             self.setStyleSheet(qss)
             logger.debug("Applied QSS style from %s", qss_path)

@@ -1,6 +1,7 @@
 """config for logger"""
 
 from pathlib import Path
+
 from pg_budget.utils import __version__
 
 LOG_DIR = Path.home() / ".pg_budget" / "logs"

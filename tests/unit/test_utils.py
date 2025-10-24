@@ -1,6 +1,6 @@
-from datetime import date, datetime
 import os
 import sys
+from datetime import date, datetime
 
 import pytest
 from PySide6.QtCore import QDate, QLocale
@@ -12,6 +12,7 @@ class TestUtils:
     def test_version_string(self, mocker):
         mocker.patch("importlib.metadata.version", return_value="1.2.3")
         import importlib
+
         import pg_budget.utils as utils_reload
 
         importlib.reload(utils_reload)

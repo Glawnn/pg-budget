@@ -1,10 +1,10 @@
-from PySide6.QtWidgets import QHBoxLayout
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QHBoxLayout
 
-from pg_budget.core.services import expenseService, incomeService
+from pg_budget.core.services import expense_service, income_service
+from pg_budget.gui import logger
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views.base_view import BaseView
-from pg_budget.gui import logger
 from pg_budget.gui.widgets.expenses_table import ExpensesTable
 from pg_budget.gui.widgets.incomes_table import IncomesTable
 from pg_budget.gui.widgets.month_year_picker import MonthYearPicker
@@ -46,8 +46,8 @@ class ResumeView(BaseView):
         """Load / reload all elements on view"""
         year, month = self.month_year_picker.get_year_month()
         logger.info("Loading ResumeView for %d/%d", month, year)
-        incomes = incomeService.get_by_month(year, month)
-        expenses = expenseService.get_by_month(year, month)
+        incomes = income_service.get_by_month(year, month)
+        expenses = expense_service.get_by_month(year, month)
 
         self.income_table.load(incomes)
         self.expense_table.load(expenses)

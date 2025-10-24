@@ -3,10 +3,11 @@
 import json
 import os
 from pathlib import Path
+
 from platformdirs import user_documents_dir
-from pg_budget.logger_setup import logger
 
 from pg_budget.core.models.category import init_category_db
+from pg_budget.logger_setup import logger
 
 DATABASE_FOLDER = os.path.join(user_documents_dir(), "pg_budget")
 
@@ -47,7 +48,7 @@ class Database:
         Returns:
             dict: all datas from db
         """
-        with open(self.db_path, "r", encoding="utf-8") as f:
+        with open(self.db_path, encoding="utf-8") as f:
             return json.load(f)
 
     def write_data(self, data):

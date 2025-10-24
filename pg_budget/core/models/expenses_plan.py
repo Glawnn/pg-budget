@@ -1,8 +1,9 @@
 """Expense Plan model"""
 
-from dataclasses import dataclass, field
-from typing import Literal, Optional
 import uuid
+from dataclasses import dataclass, field
+from typing import Literal
+
 from pg_budget.core.models.base_model import BaseModel
 
 
@@ -15,13 +16,13 @@ class ExpensesPlan(BaseModel):  # pylint: disable=too-many-instance-attributes
 
     start_date: str
     end_date: str
-    due_date: Optional[str] = None
+    due_date: str | None = None
     frequency: Literal["monthly", "quarterly", "yearly"] = "monthly"
 
-    description: Optional[str] = None
-    category_id: Optional[str] = None
+    description: str | None = None
+    category_id: str | None = None
 
-    expensesplan_id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
+    expensesplan_id: str | None = field(default_factory=lambda: str(uuid.uuid4()))
 
     def __post_init__(self):
         if not self.due_date:

@@ -1,8 +1,8 @@
 """logger for app"""
 
 import logging
-from logging.handlers import RotatingFileHandler
 import sys
+from logging.handlers import RotatingFileHandler
 
 from pg_budget.logger_setup.config import (
     LOG_DIR,
@@ -13,8 +13,8 @@ from pg_budget.logger_setup.config import (
     LOG_LEVEL_FILE,
     LOGGER_NAME,
 )
-from .formatter import SimpleFormatter
 
+from .formatter import SimpleFormatter
 
 # Detect log path
 if getattr(sys, "frozen", False):

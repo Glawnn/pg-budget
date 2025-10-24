@@ -1,5 +1,6 @@
-import pytest
 import locale
+
+import pytest
 from PySide6.QtCore import QLocale
 
 
