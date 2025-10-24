@@ -1,4 +1,3 @@
-from typing import List
 from PySide6.QtWidgets import QFrame, QGridLayout
 
 from pg_budget.gui.widgets.stat_item import StatItem
@@ -7,7 +6,7 @@ from pg_budget.gui.widgets.stat_item import StatItem
 class BaseStats(QFrame):
     """Base class for statistic display widgets"""
 
-    def __init__(self, items: List[StatItem], columns=2, parent=None):
+    def __init__(self, items: list[StatItem], columns=2, parent=None):
         """
         items: list of StatItem objects
         columns: number of columns in the grid
@@ -21,7 +20,7 @@ class BaseStats(QFrame):
         if items:
             self._setup_items(items)
 
-    def _setup_items(self, items: List[StatItem]):
+    def _setup_items(self, items: list[StatItem]):
         """Add StatItem widgets to the grid automatically"""
         for i, item in enumerate(items):
             row, col = divmod(i, self.columns)

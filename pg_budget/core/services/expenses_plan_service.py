@@ -1,13 +1,14 @@
 """expanse plan service"""
 
 from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
 
+from pg_budget.core import logger
 from pg_budget.core.models.expense import Expense
 from pg_budget.core.models.expenses_plan import ExpensesPlan
 from pg_budget.core.services.crud_services import CRUDService
 from pg_budget.core.services.expense_service import ExpenseService
-from pg_budget.core import logger
 
 
 class ExpensesPlanService(CRUDService):
@@ -66,4 +67,4 @@ class ExpensesPlanService(CRUDService):
         return expenses
 
 
-expensesPlanService = ExpensesPlanService()
+expenses_plan_service = ExpensesPlanService()

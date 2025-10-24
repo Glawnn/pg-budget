@@ -1,10 +1,10 @@
 """Text Edit Widget"""
 
-from PySide6.QtWidgets import QWidget, QTextEdit, QLabel, QVBoxLayout, QSizePolicy
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QSizePolicy, QTextEdit, QVBoxLayout, QWidget
 
-from pg_budget.gui.utils import safe_callback
 from pg_budget.gui import logger
+from pg_budget.gui.utils import safe_callback
 
 
 class TextEdit(QWidget):

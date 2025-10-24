@@ -1,5 +1,6 @@
 # test_formatter.py
 import logging
+
 import pytest
 
 from pg_budget.logger_setup.formatter import SimpleFormatter

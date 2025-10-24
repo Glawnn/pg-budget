@@ -1,19 +1,19 @@
 """base of table"""
 
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QScrollArea,
-    QFrame,
-    QPushButton,
-    QCheckBox,
-    QLabel,
-    QComboBox,
-)
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QFrame,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
-from pg_budget.gui.widgets.base import BaseRow
 from pg_budget.gui import logger
+from pg_budget.gui.widgets.base import BaseRow
 from pg_budget.gui.widgets.base.base_row import RowField
 from pg_budget.gui.widgets.header_row import HeaderRow
 
@@ -93,7 +93,7 @@ class BaseTable(QFrame):
         """Resize all row"""
         if self.rows:
             column_keys = [name for name, widget in self.rows[0].widgets]
-            max_widths = {key: 0 for key in column_keys}
+            max_widths = dict.fromkeys(column_keys, 0)
 
             all_rows: list[BaseRow] = []
             all_rows.append(self.header_row)
@@ -124,7 +124,7 @@ class BaseTable(QFrame):
 
         def sort_key(row: BaseRow):
             widget = row.widgets[index][1]
-            if isinstance(widget, QPushButton) or isinstance(widget, QLabel):
+            if isinstance(widget, (QPushButton, QLabel)):
                 text = widget.text()
                 try:
                     return float(text.replace(" €", "").replace(",", "."))

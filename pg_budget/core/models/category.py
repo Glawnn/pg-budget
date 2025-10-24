@@ -1,7 +1,7 @@
 """Module defining expense categories using an enumeration."""
 
 from dataclasses import dataclass
-from typing import List, Optional
+
 from pg_budget.core.models.base_model import BaseModel
 
 
@@ -12,13 +12,13 @@ class Category(BaseModel):
     category_id: str
     category_type: str  # 'expense'
     name: str
-    description: Optional[str] = None
-    color: Optional[str] = None
-    icon: Optional[str] = None
+    description: str | None = None
+    color: str | None = None
+    icon: str | None = None
 
 
 def init_category_db():
-    categories: List[Category] = []
+    categories: list[Category] = []
     categories.extend(base_expense_categories())
     categories.extend(base_income_categories())
 

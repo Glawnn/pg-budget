@@ -1,6 +1,6 @@
 """BaseView"""
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 
 class BaseView(QWidget):

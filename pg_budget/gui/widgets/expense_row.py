@@ -1,13 +1,13 @@
 """Custom Row for Expense"""
 
-from PySide6.QtWidgets import QCheckBox
 from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QCheckBox
 
+from pg_budget.core.models.expense import Expense
+from pg_budget.core.services import expense_service
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
-from pg_budget.core.models.expense import Expense
 from pg_budget.utils import DateFormatter
-from pg_budget.core.services import expenseService
 
 
 class ExpenseRow(BaseRow):
@@ -17,7 +17,7 @@ class ExpenseRow(BaseRow):
 
     def __init__(self, expense: Expense, parent=None):
         formatted_date = DateFormatter.format(expense.date)
-        categories = expenseService.get_categories()
+        categories = expense_service.get_categories()
         category = next(
             (cat for cat in categories if cat.category_id == expense.category_id),
             None,

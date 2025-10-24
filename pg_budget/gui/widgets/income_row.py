@@ -1,9 +1,9 @@
 """Custom Row for Income"""
 
 from pg_budget.core.models.income import Income
+from pg_budget.core.services import income_service
 from pg_budget.gui.widgets.base.base_row import BaseRow, RowField
 from pg_budget.utils import DateFormatter
-from pg_budget.core.services import incomeService
 
 
 class IncomeRow(BaseRow):
@@ -11,7 +11,7 @@ class IncomeRow(BaseRow):
 
     def __init__(self, income: Income, parent=None):
         formatted_date = DateFormatter.format(income.date)
-        categories = incomeService.get_categories()
+        categories = income_service.get_categories()
         category = next(
             (cat for cat in categories if cat.category_id == income.category_id),
             None,

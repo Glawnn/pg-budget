@@ -1,7 +1,8 @@
 import json
-import pytest
-from pg_budget.core.db import db
 
+import pytest
+
+from pg_budget.core.db import db
 
 pytestmark = pytest.mark.e2e
 

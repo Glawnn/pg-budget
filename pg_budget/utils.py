@@ -1,11 +1,11 @@
 """utils"""
 
-from datetime import date, datetime
 import os
 import sys
-from PySide6.QtCore import QLocale, QDate
-
+from datetime import date, datetime
 from importlib.metadata import version
+
+from PySide6.QtCore import QDate, QLocale
 
 __version__ = "v" + version("pg-budget")
 
@@ -38,8 +38,8 @@ class DateFormatter:
             try:
                 dt = datetime.strptime(date_input, fmt)
                 return QDate(dt.year, dt.month, dt.day)
-            except ValueError:
-                raise ValueError(f"String date format should be YYYY-MM-DD or YYYY/MM/DD, got: {date_input}")
+            except ValueError as err:
+                raise ValueError(f"String date format should be YYYY-MM-DD or YYYY/MM/DD, got: {date_input}") from err
 
         raise TypeError(f"Unsupported date type: {type(date_input)}")
 

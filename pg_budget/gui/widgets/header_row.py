@@ -2,8 +2,8 @@
 
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QPushButton
-from pg_budget.gui import logger
 
+from pg_budget.gui import logger
 from pg_budget.gui.widgets.base.base_row import BaseRow
 
 

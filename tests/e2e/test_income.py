@@ -1,6 +1,6 @@
 import pytest
-from PySide6.QtCore import QTimer, Qt
-from PySide6.QtWidgets import QDialog, QPushButton, QApplication, QMessageBox
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QApplication, QDialog, QMessageBox, QPushButton
 
 from pg_budget.gui.windows.main_window import MainWindow
 from tests.e2e.utils import absent_in_table, get_row_in_table, present_in_table

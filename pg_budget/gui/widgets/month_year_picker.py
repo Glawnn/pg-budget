@@ -1,8 +1,9 @@
 """widget for pick month year"""
 
 from datetime import datetime
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QComboBox, QPushButton
+
 from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QComboBox, QHBoxLayout, QPushButton, QWidget
 
 from pg_budget.gui.utils import safe_callback
 

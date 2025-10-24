@@ -1,8 +1,7 @@
 """Income model"""
 
-from dataclasses import dataclass, field
-from typing import Optional
 import uuid
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from pg_budget.core.models.base_model import BaseModel
@@ -14,7 +13,7 @@ class Income(BaseModel):
 
     amount: float
     name: str
-    description: Optional[str] = None
-    category_id: Optional[str] = None
-    income_id: Optional[str] = field(default_factory=lambda: str(uuid.uuid4()))
-    date: Optional[str] = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d"))
+    description: str | None = None
+    category_id: str | None = None
+    income_id: str | None = field(default_factory=lambda: str(uuid.uuid4()))
+    date: str | None = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d"))

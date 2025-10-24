@@ -1,6 +1,7 @@
 import subprocess
 import sys
 from pathlib import Path
+
 from pg_budget.utils import __version__
 
 OS = ""
@@ -57,8 +58,6 @@ def lint():
             "-m",
             "ruff",
             "check",
-            "--line-length",
-            str(RUFF_MAX_LINE_LENGTH),
             *PACKAGES,
             TESTS,
         ]
@@ -74,8 +73,6 @@ def format():
             "-m",
             "ruff",
             "format",
-            "--line-length",
-            str(RUFF_MAX_LINE_LENGTH),
             *PACKAGES,
             TESTS,
             DEV_TOOLS,

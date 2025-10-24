@@ -1,11 +1,11 @@
 """View for Expenses Plans"""
 
 from pg_budget.core.models.expenses_plan import ExpensesPlan
-from pg_budget.core.services import expensesPlanService
+from pg_budget.core.services import expenses_plan_service
+from pg_budget.gui import logger
 from pg_budget.gui.utils import safe_callback
 from pg_budget.gui.views.base_view import BaseView
 from pg_budget.gui.widgets.expenses_plan_table import ExpensesPlanTable
-from pg_budget.gui import logger
 
 
 class ExpensesPlanView(BaseView):
@@ -23,6 +23,6 @@ class ExpensesPlanView(BaseView):
     def load(self):
         """Load / reload all elements on view"""
         logger.info("Loading ExpensesPlanView")
-        expenses_plans = [ExpensesPlan(**exp_plan) for exp_plan in expensesPlanService.get_all()]
+        expenses_plans = [ExpensesPlan(**exp_plan) for exp_plan in expenses_plan_service.get_all()]
         self.expenses_plan_table.load(expenses_plans)
         logger.debug("ExpensesPlanView loaded %d expense plans", len(expenses_plans))

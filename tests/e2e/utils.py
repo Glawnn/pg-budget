@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QCheckBox
 import pytest
+from PySide6.QtWidgets import QCheckBox
 
 
 def present_in_table(table, expected):
@@ -8,10 +8,7 @@ def present_in_table(table, expected):
         for col, val in expected.items():
             widget = row.get_widget_by_name(col)
 
-            if isinstance(widget, QCheckBox):
-                widget_val = widget.isChecked()
-            else:
-                widget_val = widget.text()
+            widget_val = widget.isChecked() if isinstance(widget, QCheckBox) else widget.text()
 
             if widget_val != val:
                 match = False
@@ -23,7 +20,7 @@ def present_in_table(table, expected):
     all_rows = []
     for i, row in enumerate(table.rows):
         row_repr = {}
-        for col in expected.keys():
+        for col in expected:
             widget = row.get_widget_by_name(col)
             if isinstance(widget, QCheckBox):
                 row_repr[col] = widget.isChecked()

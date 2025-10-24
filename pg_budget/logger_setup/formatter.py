@@ -1,7 +1,7 @@
 """Formatters for logging"""
 
-import traceback
 import logging
+import traceback
 
 
 class SimpleFormatter(logging.Formatter):
